@@ -1,52 +1,60 @@
 <section class="publicaciones">
 
-  @for (pub of publicaciones; track pub.id) {
-    <article class="card-publicacion">
+  <h2 class="titulo-publicaciones">Publicaciones</h2>
 
-      <!-- Cabecera: avatar + usuario + fecha -->
-      <header class="card-header">
-        <img [src]="pub.avatar" [alt]="'Avatar de ' + pub.usuario" class="card-avatar" />
-        <div class="card-header-texto">
-          <span class="card-usuario">{{ pub.usuario }}</span>
-          <small class="card-fecha">{{ pub.fecha }}</small>
-        </div>
-      </header>
+  <!-- Agregar publicación + ordenamiento -->
+  <div class="barra-acciones">
+    <button type="button" class="btn-agregar" (click)="mostrandoFormulario.set(true)">
+      <fa-icon [icon]="faPlus"></fa-icon>
+      Agregar publicación
+    </button>
 
-      <!-- Imagen (doble click = like) -->
-      <div class="card-imagen-contenedor" (dblclick)="likeConDobleClick(pub)">
-        <img [src]="pub.imagen" [alt]="'Publicación de ' + pub.usuario" class="card-imagen" />
+    <div class="barra-orden">
+      <label for="orden">Ordenar por:</label>
+      <select id="orden" #selectorOrden class="select-orden" [value]="orden()" (change)="cambiarOrden(selectorOrden.value)">
+        <option value="fecha">Más recientes</option>
+        <option value="likes">Más huellitas</option>
+      </select>
+    </div>
+  </div>
 
-        @if (pub.mostrarPaw) {
-          <fa-icon [icon]="faPaw" class="paw-grande"></fa-icon>
-        }
-      </div>
+  <!-- Listado -->
+  @if (cargando() && publicaciones().length === 0) {
+    <p class="mensaje-estado">Cargando publicaciones...</p>
+  } @else if (publicaciones().length === 0) {
+    <p class="mensaje-estado">Todavía no hay publicaciones. ¡Sé el primero en compartir!</p>
+  } @else {
+    @for (pub of publicaciones(); track pub._id) {
+      <app-publicacion-card [publicacion]="pub" (eliminada)="onEliminada()"></app-publicacion-card>
+    }
+  }
 
-      <!-- Acciones: like con huellita + comentarios -->
-      <div class="card-acciones">
-        <button
-          type="button"
-          class="btn-accion btn-like"
-          [class.liked]="pub.liked"
-          (click)="toggleLike(pub)"
-          [attr.aria-label]="pub.liked ? 'Quitar me gusta' : 'Dar me gusta'"
-          [attr.aria-pressed]="pub.liked"
-        >
-          <fa-icon [icon]="faPaw"></fa-icon>
-        </button>
-
-        <button type="button" class="btn-accion" aria-label="Comentar">
-          <fa-icon [icon]="faComment"></fa-icon>
-        </button>
-      </div>
-
-      <!-- Contador y descripción -->
-      <p class="card-likes">{{ pub.likes }} {{ pub.likes === 1 ? 'huellita' : 'huellitas' }}</p>
-
-      <p class="card-descripcion">
-        <strong>{{ pub.usuario }}</strong> {{ pub.descripcion }}
-      </p>
-
-    </article>
+  <!-- Paginación -->
+  @if (total() > 0) {
+    <nav class="paginacion" aria-label="Paginación">
+      <button type="button" class="btn-pagina" [disabled]="pagina() === 1 || cargando()" (click)="irAPagina(pagina() - 1)">
+        Anterior
+      </button>
+      <span class="pagina-actual">Página {{ pagina() }} de {{ totalPaginas() }}</span>
+      <button type="button" class="btn-pagina" [disabled]="pagina() === totalPaginas() || cargando()" (click)="irAPagina(pagina() + 1)">
+        Siguiente
+      </button>
+    </nav>
   }
 
 </section>
+
+<!-- Ventana del formulario (se muestra al tocar "Agregar publicación") -->
+<app-nueva-publicacion
+  [visible]="mostrandoFormulario()"
+  (cerrar)="mostrandoFormulario.set(false)"
+  (creada)="onCreada()"
+></app-nueva-publicacion>
+
+<app-modal
+  [visible]="modalError().visible"
+  [tipo]="'error'"
+  [titulo]="'No se pudieron cargar las publicaciones'"
+  [mensaje]="modalError().mensaje"
+  (cerrar)="cerrarError()"
+></app-modal>

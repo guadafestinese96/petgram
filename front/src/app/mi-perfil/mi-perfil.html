@@ -32,7 +32,18 @@
       </div>
     </article>
 
-    <!-- Sprint #2: acá van las últimas 3 publicaciones con sus comentarios -->
+    <!-- Mis últimas 3 publicaciones -->
+    <h3 class="perfil-subtitulo">Mis últimas publicaciones</h3>
+
+    @if (cargando()) {
+      <p class="perfil-mensaje">Cargando publicaciones...</p>
+    } @else if (ultimasPublicaciones().length === 0) {
+      <p class="perfil-mensaje">Todavía no hiciste ninguna publicación.</p>
+    } @else {
+      @for (pub of ultimasPublicaciones(); track pub._id) {
+        <app-publicacion-card [publicacion]="pub" (eliminada)="cargarPublicaciones()"></app-publicacion-card>
+      }
+    }
   } @else {
     <article class="perfil-card">
       <h2 class="perfil-nombre">No hay una sesión iniciada</h2>
@@ -40,3 +51,11 @@
     </article>
   }
 </section>
+
+<app-modal
+  [visible]="modalError().visible"
+  [tipo]="'error'"
+  [titulo]="'No se pudieron cargar tus publicaciones'"
+  [mensaje]="modalError().mensaje"
+  (cerrar)="cerrarError()"
+></app-modal>

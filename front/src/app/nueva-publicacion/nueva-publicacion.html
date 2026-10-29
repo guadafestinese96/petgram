@@ -1,0 +1,67 @@
+@if (visible()) {
+  <div class="fondo">
+    <div class="caja" role="dialog" aria-modal="true" aria-label="Nueva publicación">
+
+      <header class="caja-header">
+        <h3 class="caja-titulo">Nueva publicación</h3>
+        <button type="button" class="btn-cerrar" (click)="cancelar()" aria-label="Cerrar">
+          <fa-icon [icon]="faXmark"></fa-icon>
+        </button>
+      </header>
+
+      <form [formGroup]="form" (ngSubmit)="onSubmit()" class="formulario">
+
+        <!-- Selector de archivo (oculto): lo abren los botones de abajo -->
+        <input #selectorArchivo type="file" class="oculto" accept="image/*" (change)="onFileSelected($event)" />
+
+        <!-- Vista previa de la foto o zona para elegirla -->
+        @if (previsualizacion()) {
+          <div class="preview">
+            <img [src]="previsualizacion()" alt="Vista previa de tu imagen" class="preview-img" />
+            <div class="preview-acciones">
+              <button type="button" class="btn-mini" (click)="selectorArchivo.click()">Cambiar</button>
+              <button type="button" class="btn-mini btn-mini-quitar" (click)="quitarImagen(selectorArchivo)">Quitar</button>
+            </div>
+          </div>
+        } @else {
+          <button type="button" class="zona-imagen" (click)="selectorArchivo.click()">
+            <fa-icon [icon]="faImage" class="zona-icono"></fa-icon>
+            <span class="zona-texto">Elegir una foto</span>
+            <small class="zona-ayuda">Opcional · JPG, PNG, WEBP o GIF · máx. 5 MB</small>
+          </button>
+        }
+
+        <div class="campo">
+          <label class="label">Título:</label>
+          <input type="text" formControlName="titulo" class="input" maxlength="100" />
+          @if (form.get('titulo')?.touched && form.get('titulo')?.invalid) {
+            <div class="error">El título es obligatorio (máximo 100 caracteres).</div>
+          }
+        </div>
+
+        <div class="campo">
+          <label class="label">Mensaje:</label>
+          <textarea formControlName="mensaje" class="input textarea" rows="3" maxlength="500"></textarea>
+          @if (form.get('mensaje')?.touched && form.get('mensaje')?.invalid) {
+            <div class="error">El mensaje es obligatorio (máximo 500 caracteres).</div>
+          }
+        </div>
+
+        <div class="acciones">
+          <button type="button" class="btn-cancelar" (click)="cancelar()">Cancelar</button>
+          <button type="submit" class="btn-publicar" [disabled]="form.invalid || enviando()">
+            {{ enviando() ? 'Publicando...' : 'Publicar' }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+}
+
+<app-modal
+  [visible]="modal().visible"
+  [tipo]="modal().tipo"
+  [titulo]="modal().titulo"
+  [mensaje]="modal().mensaje"
+  (cerrar)="cerrarModal()"
+></app-modal>

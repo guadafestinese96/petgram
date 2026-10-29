@@ -11,10 +11,10 @@ const EXTENSIONES: Record<string, string> = {
   'image/gif': '.gif',
 };
 
-export const DIR_PERFILES = join(process.cwd(), 'uploads', 'perfiles');
+export type CarpetaImagenes = 'perfiles' | 'publicaciones';
 
 // La imagen llega en memoria y recién se escribe en disco cuando el resto de
-// las validaciones pasaron (así no quedan archivos huérfanos si el registro falla).
+// las validaciones pasaron (así no quedan archivos huérfanos si algo falla).
 export const opcionesImagen = {
   storage: multer.memoryStorage(),
   limits: { fileSize: 5 * 1024 * 1024 }, // 5 MB
@@ -25,9 +25,7 @@ export const opcionesImagen = {
   ) => {
     if (!EXTENSIONES[file.mimetype]) {
       return cb(
-        new BadRequestException(
-          'La imagen de perfil debe ser JPG, PNG, WEBP o GIF.',
-        ),
+        new BadRequestException('La imagen debe ser JPG, PNG, WEBP o GIF.'),
         false,
       );
     }
@@ -35,12 +33,18 @@ export const opcionesImagen = {
   },
 };
 
-// Guarda la imagen y devuelve la URL relativa que se persiste en la DB
-export async function guardarImagenPerfil(
+// Guarda la imagen en uploads/<carpeta> y devuelve la URL relativa que se persiste en la DB
+export async function guardarImagen(
   file: Express.Multer.File,
+  carpeta: CarpetaImagenes,
 ): Promise<string> {
-  await mkdir(DIR_PERFILES, { recursive: true });
+  const directorio = join(process.cwd(), 'uploads', carpeta);
+  await mkdir(directorio, { recursive: true });
   const nombre = `${randomUUID()}${EXTENSIONES[file.mimetype]}`;
-  await writeFile(join(DIR_PERFILES, nombre), file.buffer);
-  return `/uploads/perfiles/${nombre}`;
+  await writeFile(join(directorio, nombre), file.buffer);
+  return `/uploads/${carpeta}/${nombre}`;
 }
+
+// Se mantiene para el módulo de autenticación (Sprint 1)
+export const guardarImagenPerfil = (file: Express.Multer.File) =>
+  guardarImagen(file, 'perfiles');

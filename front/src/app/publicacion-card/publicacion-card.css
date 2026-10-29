@@ -1,0 +1,173 @@
+:host {
+    display: block;
+    width: 100%;
+    max-width: 470px;
+}
+
+.card-publicacion {
+    width: 100%;
+    background-color: white;
+    border: 1px solid var(--azul-oscuro);
+    border-radius: 12px;
+    overflow: hidden;
+    color: var(--azul-oscuro);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* ---------- CABECERA ---------- */
+.card-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 15px;
+}
+
+.card-avatar {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--azul-medio);
+    flex-shrink: 0;
+}
+
+.card-avatar-inicial {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--azul-medio);
+    color: var(--azul-claro);
+    font-weight: 600;
+}
+
+.card-header-texto {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.2;
+    flex: 1;
+    min-width: 0;
+}
+
+.card-usuario {
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+
+.card-fecha {
+    font-size: 0.75rem;
+    opacity: 0.6;
+}
+
+.btn-eliminar {
+    background: none;
+    border: none;
+    color: var(--azul-oscuro);
+    opacity: 0.45;
+    font-size: 1.05rem;
+    cursor: pointer;
+    padding: 6px;
+    transition: opacity 0.2s, color 0.2s;
+}
+
+.btn-eliminar:hover {
+    opacity: 1;
+    color: #e5484d;
+}
+
+/* ---------- IMAGEN ---------- */
+.card-imagen-contenedor {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    background-color: #e9e9e9;
+    overflow: hidden;
+    cursor: pointer;
+    user-select: none;
+}
+
+.card-imagen {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.paw-grande {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    font-size: 6rem;
+    color: white;
+    filter: drop-shadow(0 0 10px rgba(0, 0, 0, 0.5));
+    pointer-events: none;
+    transform: translate(-50%, -50%) scale(0);
+    animation: paw-pop 0.8s ease forwards;
+}
+
+@keyframes paw-pop {
+    0%   { transform: translate(-50%, -50%) scale(0);   opacity: 0; }
+    25%  { transform: translate(-50%, -50%) scale(1.3); opacity: 1; }
+    45%  { transform: translate(-50%, -50%) scale(1);   opacity: 1; }
+    80%  { transform: translate(-50%, -50%) scale(1);   opacity: 1; }
+    100% { transform: translate(-50%, -50%) scale(1.1); opacity: 0; }
+}
+
+/* ---------- ACCIONES ---------- */
+.card-acciones {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 10px 15px 4px;
+}
+
+.btn-accion {
+    background: none;
+    border: none;
+    padding: 0;
+    font-size: 1.6rem;
+    color: var(--azul-oscuro);
+    opacity: 0.55;
+    cursor: pointer;
+    transition: transform 0.15s, opacity 0.2s, color 0.2s;
+}
+
+.btn-accion:hover { opacity: 1; transform: scale(1.12); }
+.btn-accion:active { transform: scale(0.9); }
+.btn-accion:disabled { cursor: wait; }
+
+.btn-like.liked {
+    color: #ff4d6d;
+    opacity: 1;
+    animation: like-bounce 0.4s ease;
+}
+
+@keyframes like-bounce {
+    0%   { transform: scale(1); }
+    40%  { transform: scale(1.4) rotate(-12deg); }
+    70%  { transform: scale(0.9) rotate(6deg); }
+    100% { transform: scale(1); }
+}
+
+/* ---------- TEXTOS ---------- */
+.card-likes {
+    margin: 4px 15px 0;
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.card-contenido {
+    margin: 6px 15px 15px;
+}
+
+.card-titulo {
+    font-size: 1.05rem;
+    margin-bottom: 3px;
+    word-break: break-word;
+}
+
+.card-mensaje {
+    font-size: 0.9rem;
+    line-height: 1.4;
+    word-break: break-word;
+    white-space: pre-line;
+}

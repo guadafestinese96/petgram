@@ -1,0 +1,208 @@
+.fondo {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(5, 10, 48, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 15px;
+    z-index: 900; /* por debajo de los modales de aviso (1000) */
+    animation: fondo-in 0.2s ease;
+}
+
+.caja {
+    background-color: var(--azul-oscuro);
+    color: var(--azul-claro);
+    width: 100%;
+    max-width: 470px;
+    max-height: 92vh;
+    overflow-y: auto;
+    border-radius: 14px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+    animation: caja-in 0.25s ease;
+}
+
+.caja-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 18px;
+    border-bottom: 1px solid rgba(250, 246, 252, 0.15);
+}
+
+.caja-titulo {
+    font-size: 1.1rem;
+}
+
+.btn-cerrar {
+    background: none;
+    border: none;
+    color: var(--azul-claro);
+    font-size: 1.3rem;
+    cursor: pointer;
+    opacity: 0.7;
+    transition: opacity 0.2s;
+}
+
+.btn-cerrar:hover { opacity: 1; }
+
+.formulario {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    padding: 18px;
+}
+
+.oculto {
+    display: none;
+}
+
+/* ---------- ZONA PARA ELEGIR FOTO ---------- */
+.zona-imagen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    aspect-ratio: 16 / 10;
+    background-color: rgba(250, 246, 252, 0.06);
+    border: 2px dashed rgba(250, 246, 252, 0.35);
+    border-radius: 10px;
+    color: var(--azul-claro);
+    font-family: 'Fredoka', sans-serif;
+    cursor: pointer;
+    transition: background-color 0.2s, border-color 0.2s;
+}
+
+.zona-imagen:hover {
+    background-color: rgba(35, 61, 255, 0.2);
+    border-color: var(--azul-medio);
+}
+
+.zona-icono {
+    font-size: 2.6rem;
+    color: var(--azul-medio);
+}
+
+.zona-texto {
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+.zona-ayuda {
+    opacity: 0.6;
+    font-size: 0.75rem;
+}
+
+/* ---------- VISTA PREVIA (mismo recorte cuadrado que las cards) ---------- */
+.preview {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    border-radius: 10px;
+    overflow: hidden;
+    background-color: #000;
+}
+
+.preview-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.preview-acciones {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    display: flex;
+    gap: 8px;
+}
+
+.btn-mini {
+    background-color: rgba(5, 10, 48, 0.8);
+    color: var(--azul-claro);
+    border: none;
+    border-radius: 20px;
+    padding: 6px 14px;
+    font-family: 'Fredoka', sans-serif;
+    font-size: 0.85rem;
+    cursor: pointer;
+    backdrop-filter: blur(4px);
+    transition: background-color 0.2s;
+}
+
+.btn-mini:hover { background-color: var(--azul-medio); }
+.btn-mini-quitar:hover { background-color: #e5484d; }
+
+/* ---------- CAMPOS ---------- */
+.campo {
+    display: flex;
+    flex-direction: column;
+}
+
+.label {
+    margin-bottom: 4px;
+    font-size: 0.9rem;
+}
+
+.input {
+    border: none;
+    border-radius: 5px;
+    padding: 8px 10px;
+    color: var(--azul-oscuro);
+    width: 100%;
+    box-sizing: border-box;
+    font-family: 'Fredoka', sans-serif;
+}
+
+.textarea {
+    resize: vertical;
+}
+
+.error {
+    color: #ff8080;
+    font-size: 11px;
+    margin-top: 2px;
+}
+
+/* ---------- BOTONES ---------- */
+.acciones {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+}
+
+.btn-cancelar,
+.btn-publicar {
+    border-radius: 6px;
+    padding: 10px 22px;
+    font-family: 'Fredoka', sans-serif;
+    cursor: pointer;
+    transition: opacity 0.2s;
+}
+
+.btn-cancelar {
+    background: transparent;
+    color: var(--azul-claro);
+    border: 1px solid rgba(250, 246, 252, 0.4);
+}
+
+.btn-publicar {
+    background-color: var(--azul-medio);
+    color: var(--azul-claro);
+    border: 1px solid var(--azul-medio);
+}
+
+.btn-publicar:hover { opacity: 0.9; }
+.btn-publicar:disabled { opacity: 0.5; cursor: not-allowed; }
+
+@keyframes fondo-in {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+@keyframes caja-in {
+    from { transform: translateY(15px) scale(0.96); opacity: 0; }
+    to   { transform: translateY(0) scale(1);       opacity: 1; }
+}

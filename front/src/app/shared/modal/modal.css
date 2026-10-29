@@ -46,10 +46,17 @@
     white-space: pre-line; /* respeta los saltos de línea de varios errores */
 }
 
+.modal-botones {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
 .modal-boton {
     background-color: var(--azul-medio);
     color: var(--azul-claro);
-    border: none;
+    border: 1px solid var(--azul-medio);
     border-radius: 6px;
     padding: 10px 28px;
     font-family: 'Fredoka', sans-serif;
@@ -59,6 +66,17 @@
 }
 
 .modal-boton:hover { opacity: 0.9; }
+
+.modal-boton-secundario {
+    background-color: transparent;
+    color: var(--azul-oscuro);
+    border-color: var(--azul-oscuro);
+}
+
+.modal-boton-peligro {
+    background-color: #e5484d;
+    border-color: #e5484d;
+}
 
 @keyframes fondo-in {
     from { opacity: 0; }

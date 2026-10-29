@@ -1,7 +1,9 @@
 .perfil {
     display: flex;
-    justify-content: center;
-    padding: 30px 15px;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    padding: 30px 15px 40px;
 }
 
 .perfil-card {
@@ -115,4 +117,19 @@
 
 .btn-salir {
     background-color: var(--azul-oscuro);
+}
+
+.perfil-subtitulo {
+    color: var(--azul-oscuro);
+    background-color: white;
+    padding: 6px 20px;
+    border-radius: 20px;
+}
+
+.perfil-mensaje {
+    background-color: white;
+    color: var(--azul-oscuro);
+    padding: 12px 20px;
+    border-radius: 12px;
+    text-align: center;
 }

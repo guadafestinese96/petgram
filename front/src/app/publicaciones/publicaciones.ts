@@ -1,79 +1,91 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, computed, signal } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faPaw, faComment } from '@fortawesome/free-solid-svg-icons';
+import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import { NuevaPublicacion } from '../nueva-publicacion/nueva-publicacion';
+import { OrdenPublicaciones, Publicacion } from '../models/publicacion';
+import { PublicacionCard } from '../publicacion-card/publicacion-card';
+import { PublicacionesService } from '../services/publicaciones.service';
+import { obtenerMensajeError } from '../shared/http-error';
+import { Modal } from '../shared/modal/modal';
 
-interface Publicacion {
-  id: number;
-  usuario: string;
-  avatar: string;
-  fecha: string;
-  imagen: string;
-  descripcion: string;
-  likes: number;
-  liked: boolean;
-  mostrarPaw: boolean; // controla la huella grande que aparece con doble click
-}
+const POR_PAGINA = 5;
 
 @Component({
-  imports: [FontAwesomeModule],
+  imports: [PublicacionCard, NuevaPublicacion, FontAwesomeModule, Modal],
   selector: 'app-publicaciones',
   styleUrl: './publicaciones.css',
   templateUrl: './publicaciones.html',
 })
-export class Publicaciones {
-  faPaw = faPaw;
-  faComment = faComment;
+export class Publicaciones implements OnInit {
+  faPlus = faPlus;
 
-  // Datos de ejemplo. Luego se reemplazan por los que lleguen del Back (NestJS)
-  publicaciones: Publicacion[] = [
-    {
-      id: 1,
-      usuario: 'luna_la_perra',
-      avatar: 'https://picsum.photos/seed/avatar1/100',
-      fecha: 'Hace 2 horas',
-      imagen: 'https://picsum.photos/seed/perro1/600/600',
-      descripcion: 'Paseo de la tarde por la plaza 🐶',
-      likes: 24,
-      liked: false,
-      mostrarPaw: false,
-    },
-    {
-      id: 2,
-      usuario: 'michi_rey',
-      avatar: 'https://picsum.photos/seed/avatar2/100',
-      fecha: 'Hace 5 horas',
-      imagen: 'https://picsum.photos/seed/gato1/600/600',
-      descripcion: 'Dormilón como siempre 😴',
-      likes: 58,
-      liked: true,
-      mostrarPaw: false,
-    },
-    {
-      id: 3,
-      usuario: 'thor_y_odin',
-      avatar: 'https://picsum.photos/seed/avatar3/100',
-      fecha: 'Ayer',
-      imagen: 'https://picsum.photos/seed/perro2/600/600',
-      descripcion: 'Los hermanos más traviesos del barrio',
-      likes: 112,
-      liked: false,
-      mostrarPaw: false,
-    },
-  ];
+  mostrandoFormulario = signal(false); // ventana de nueva publicación
+  publicaciones = signal<Publicacion[]>([]);
+  total = signal(0);
+  pagina = signal(1); // empieza en 1
+  orden = signal<OrdenPublicaciones>('fecha');
+  cargando = signal(false);
+  modalError = signal({ visible: false, mensaje: '' });
 
-  // Click en la huellita: da o quita el like
-  toggleLike(pub: Publicacion) {
-    pub.liked = !pub.liked;
-    pub.likes += pub.liked ? 1 : -1;
+  totalPaginas = computed(() => Math.max(1, Math.ceil(this.total() / POR_PAGINA)));
+
+  constructor(private publicacionesService: PublicacionesService) {}
+
+  ngOnInit() {
+    this.cargar();
   }
 
-  // Doble click sobre la imagen (como en Instagram): solo da like, no lo quita
-  likeConDobleClick(pub: Publicacion) {
-    if (!pub.liked) {
-      pub.liked = true;
-      pub.likes++;
+  cargar() {
+    this.cargando.set(true);
+
+    this.publicacionesService
+      .listar({
+        orden: this.orden(),
+        offset: (this.pagina() - 1) * POR_PAGINA,
+        limit: POR_PAGINA,
+      })
+      .subscribe({
+        next: (resultado) => {
+          this.publicaciones.set(resultado.publicaciones);
+          this.total.set(resultado.total);
+          this.cargando.set(false);
+        },
+        error: (err) => {
+          this.cargando.set(false);
+          this.modalError.set({ visible: true, mensaje: obtenerMensajeError(err) });
+        },
+      });
+  }
+
+  cambiarOrden(valor: string) {
+    this.orden.set(valor === 'likes' ? 'likes' : 'fecha');
+    this.pagina.set(1);
+    this.cargar();
+  }
+
+  irAPagina(numero: number) {
+    if (numero < 1 || numero > this.totalPaginas()) return;
+    this.pagina.set(numero);
+    this.cargar();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  // Se creó una publicación nueva: vuelve a la primera página, ordenada por fecha
+  onCreada() {
+    this.orden.set('fecha');
+    this.pagina.set(1);
+    this.cargar();
+  }
+
+  // Se eliminó una: si era la última de la página, retrocede una página
+  onEliminada() {
+    if (this.publicaciones().length === 1 && this.pagina() > 1) {
+      this.pagina.update((p) => p - 1);
     }
-    pub.mostrarPaw = true;
-    setTimeout(() => (pub.mostrarPaw = false), 800);
+    this.cargar();
+  }
+
+  cerrarError() {
+    this.modalError.update((m) => ({ ...m, visible: false }));
   }
 }

@@ -10,10 +10,11 @@ async function bootstrap() {
   // Permite que el front (Angular) consuma la API
   app.enableCors({ origin: process.env.FRONT_URL ?? 'http://localhost:4200' });
 
-  // whitelist: descarta cualquier campo que no esté en el DTO (ej: "perfil" en el registro)
-  app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
+  // whitelist: descarta los campos que no están en el DTO
+  // transform: convierte los query params (?limit=5) al tipo del DTO (number) y aplica los @Transform
+  app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
 
-  // Sirve las imágenes guardadas: http://localhost:3000/uploads/perfiles/xxx.jpg
+  // Sirve las imágenes guardadas: http://localhost:3000/uploads/publicaciones/xxx.jpg
   app.useStaticAssets(join(process.cwd(), 'uploads'), { prefix: '/uploads/' });
 
   await app.listen(process.env.PORT ?? 3000);

@@ -1,5 +1,5 @@
 @if (visible) {
-  <div class="modal-fondo" (click)="cerrar.emit()">
+  <div class="modal-fondo" (click)="clickFondo()">
     <div
       class="modal-caja modal-{{ tipo }}"
       role="dialog"
@@ -10,9 +10,22 @@
       <fa-icon [icon]="iconos[tipo]" class="modal-icono"></fa-icon>
       <h3 class="modal-titulo">{{ titulo }}</h3>
       <p class="modal-mensaje">{{ mensaje }}</p>
-      <button type="button" class="modal-boton" (click)="cerrar.emit()">
-        {{ textoBoton }}
-      </button>
+
+      <div class="modal-botones">
+        @if (textoCancelar) {
+          <button type="button" class="modal-boton modal-boton-secundario" (click)="cancelar.emit()">
+            {{ textoCancelar }}
+          </button>
+        }
+        <button
+          type="button"
+          class="modal-boton"
+          [class.modal-boton-peligro]="peligro"
+          (click)="cerrar.emit()"
+        >
+          {{ textoBoton }}
+        </button>
+      </div>
     </div>
   </div>
 }

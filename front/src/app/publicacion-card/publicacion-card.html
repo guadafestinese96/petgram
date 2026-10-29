@@ -1,0 +1,79 @@
+<article class="card-publicacion">
+
+  <!-- Cabecera: avatar + usuario + fecha + eliminar -->
+  <header class="card-header">
+    @if (avatarUrl()) {
+      <img [src]="avatarUrl()" [alt]="'Avatar de ' + publicacion().usuario.nombreUsuario" class="card-avatar" />
+    } @else {
+      <div class="card-avatar card-avatar-inicial">{{ inicial() }}</div>
+    }
+
+    <div class="card-header-texto">
+      <span class="card-usuario">{{ publicacion().usuario.nombreUsuario }}</span>
+      <small class="card-fecha">{{ publicacion().createdAt | date: 'dd/MM/yyyy HH:mm' }}</small>
+    </div>
+
+    @if (puedeEliminar()) {
+      <button type="button" class="btn-eliminar" (click)="pedirConfirmacion()" aria-label="Eliminar publicación">
+        <fa-icon [icon]="faTrash"></fa-icon>
+      </button>
+    }
+  </header>
+
+  <!-- Imagen (opcional). Doble click = me gusta -->
+  @if (imagenUrl()) {
+    <div class="card-imagen-contenedor" (dblclick)="dobleClick()">
+      <img [src]="imagenUrl()" [alt]="publicacion().titulo" class="card-imagen" />
+
+      @if (mostrarPaw()) {
+        <fa-icon [icon]="faPaw" class="paw-grande"></fa-icon>
+      }
+    </div>
+  }
+
+  <!-- Acciones -->
+  <div class="card-acciones">
+    <button
+      type="button"
+      class="btn-accion btn-like"
+      [class.liked]="meGusta()"
+      [disabled]="procesandoLike()"
+      (click)="alternarLike()"
+      [attr.aria-label]="meGusta() ? 'Quitar me gusta' : 'Dar me gusta'"
+      [attr.aria-pressed]="meGusta()"
+    >
+      <fa-icon [icon]="faPaw"></fa-icon>
+    </button>
+  </div>
+
+  <p class="card-likes">{{ cantidadLikes() }} {{ cantidadLikes() === 1 ? 'huellita' : 'huellitas' }}</p>
+
+  <!-- Contenido -->
+  <div class="card-contenido">
+    <h3 class="card-titulo">{{ publicacion().titulo }}</h3>
+    <p class="card-mensaje">{{ publicacion().mensaje }}</p>
+  </div>
+
+</article>
+
+<!-- Confirmación antes de eliminar -->
+<app-modal
+  [visible]="confirmandoEliminar()"
+  [tipo]="'info'"
+  [titulo]="'¿Eliminar publicación?'"
+  [mensaje]="'Esta acción no se puede deshacer.'"
+  [textoBoton]="'Eliminar'"
+  [textoCancelar]="'Cancelar'"
+  [peligro]="true"
+  (cerrar)="confirmarEliminacion()"
+  (cancelar)="confirmandoEliminar.set(false)"
+></app-modal>
+
+<!-- Errores -->
+<app-modal
+  [visible]="modalError().visible"
+  [tipo]="'error'"
+  [titulo]="modalError().titulo"
+  [mensaje]="modalError().mensaje"
+  (cerrar)="cerrarError()"
+></app-modal>
