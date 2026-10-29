@@ -1,0 +1,30 @@
+@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&display=swap');
+
+:root {
+    --azul-claro: #faf6fc;
+    --azul-medio: #233dff;
+    --azul-oscuro: #050a30;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    font-family: 'Fredoka', sans-serif;
+}
+
+body {
+    min-height: 100vh; /* NO usar height: 100vh */
+}
+
+/* El fondo va en una capa fija detrás de todo: queda quieto y cubre siempre la pantalla */
+body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0.7)),
+                url('../public/FONDO-HUELLITAS.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}

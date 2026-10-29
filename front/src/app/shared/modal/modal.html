@@ -1,0 +1,18 @@
+@if (visible) {
+  <div class="modal-fondo" (click)="cerrar.emit()">
+    <div
+      class="modal-caja modal-{{ tipo }}"
+      role="dialog"
+      aria-modal="true"
+      [attr.aria-label]="titulo"
+      (click)="$event.stopPropagation()"
+    >
+      <fa-icon [icon]="iconos[tipo]" class="modal-icono"></fa-icon>
+      <h3 class="modal-titulo">{{ titulo }}</h3>
+      <p class="modal-mensaje">{{ mensaje }}</p>
+      <button type="button" class="modal-boton" (click)="cerrar.emit()">
+        {{ textoBoton }}
+      </button>
+    </div>
+  </div>
+}

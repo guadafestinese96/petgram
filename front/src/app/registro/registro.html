@@ -1,0 +1,127 @@
+<form [formGroup]="registroForm" (ngSubmit)="onSubmit()" class="form-registro">
+
+  <h2 class="titulo-registro">Registro de Usuario</h2>
+
+  <!-- Nombre -->
+  <div class="label-input">
+    <label class="label-login">Nombre:</label>
+    <input type="text" formControlName="nombre" class="input-login" />
+    @if (registroForm.get('nombre')?.touched && registroForm.get('nombre')?.invalid) {
+      <div class="error">El nombre es obligatorio.</div>
+    }
+  </div>
+
+  <!-- Apellido -->
+  <div class="label-input">
+    <label class="label-login">Apellido:</label>
+    <input type="text" formControlName="apellido" class="input-login" />
+    @if (registroForm.get('apellido')?.touched && registroForm.get('apellido')?.invalid) {
+      <div class="error">El apellido es obligatorio.</div>
+    }
+  </div>
+
+  <!-- Correo -->
+  <div class="label-input">
+    <label class="label-login">Correo electrónico:</label>
+    <input type="email" formControlName="correo" class="input-login" />
+    @if (registroForm.get('correo')?.touched && registroForm.get('correo')?.invalid) {
+      <div class="error">Ingresá un correo electrónico válido.</div>
+    }
+  </div>
+
+  <!-- Nombre de Usuario -->
+  <div class="label-input">
+    <label class="label-login">Nombre de usuario:</label>
+    <input type="text" formControlName="nombreUsuario" class="input-login" />
+    @if (registroForm.get('nombreUsuario')?.touched && registroForm.get('nombreUsuario')?.invalid) {
+      <div class="error">
+        @if (registroForm.get('nombreUsuario')?.errors?.['required']) {
+          <small>El nombre de usuario es obligatorio.</small>
+        }
+        @if (registroForm.get('nombreUsuario')?.errors?.['minlength']) {
+          <small>Debe tener al menos 3 caracteres.</small>
+        }
+        @if (registroForm.get('nombreUsuario')?.errors?.['pattern']) {
+          <small>Solo letras, números, guiones bajos y puntos.</small>
+        }
+      </div>
+    }
+  </div>
+
+  <!-- Contraseña -->
+  <div class="label-input">
+    <label class="label-login">Contraseña:</label>
+    <input type="password" formControlName="password" class="input-login" />
+    @if (registroForm.get('password')?.touched && registroForm.get('password')?.invalid) {
+      <div class="error">
+        @if (registroForm.get('password')?.errors?.['required']) {
+          <small>La contraseña es obligatoria.</small>
+        }
+        @if (registroForm.get('password')?.errors?.['minlength']) {
+          <small>Debe tener al menos 8 caracteres.</small>
+        }
+        @if (registroForm.get('password')?.errors?.['pattern']) {
+          <small>Debe incluir al menos una mayúscula y un número.</small>
+        }
+      </div>
+    }
+  </div>
+
+  <!-- Repetir Contraseña -->
+  <div class="label-input">
+    <label class="label-login">Repetir contraseña:</label>
+    <input type="password" formControlName="repetirPassword" class="input-login" />
+    @if (registroForm.get('repetirPassword')?.touched && registroForm.hasError('mismatch')) {
+      <div class="error">Las contraseñas no coinciden.</div>
+    }
+  </div>
+
+  <!-- Fecha de Nacimiento -->
+  <div class="label-input">
+    <label class="label-login">Fecha de nacimiento:</label>
+    <input type="date" formControlName="fechaNacimiento" class="input-login" />
+    @if (registroForm.get('fechaNacimiento')?.touched && registroForm.get('fechaNacimiento')?.invalid) {
+      <div class="error">La fecha de nacimiento es obligatoria.</div>
+    }
+  </div>
+
+  <!-- Descripción Breve -->
+  <div class="label-input campo-completo">
+    <label class="label-login">Descripción breve:</label>
+    <textarea formControlName="descripcionBreve" class="input-login textarea-login" rows="2"></textarea>
+    @if (registroForm.get('descripcionBreve')?.touched && registroForm.get('descripcionBreve')?.invalid) {
+      <div class="error">
+        @if (registroForm.get('descripcionBreve')?.errors?.['maxlength']) {
+          <small>La descripción no puede superar los 150 caracteres.</small>
+        } @else {
+          <small>Escribí una breve descripción.</small>
+        }
+      </div>
+    }
+  </div>
+
+  <!-- Imagen de Perfil (File) -->
+  <div class="label-input campo-completo">
+    <label class="label-login">Imagen de perfil (opcional):</label>
+    <input type="file" (change)="onFileSelected($event)" class="input-file" accept="image/*" />
+  </div>
+
+  <!-- Botón de Registro -->
+  <button type="submit" [disabled]="registroForm.invalid || cargando" class="btn-login">
+    {{ cargando ? 'Registrando...' : 'Registrarse' }}
+  </button>
+
+  <!-- Enlace para volver al Login -->
+  <div class="registro-container">
+    <small class="texto-pregunta">¿Ya tenés una cuenta?</small>
+    <button type="button" class="btn-secundario" routerLink="/login">Ir al Login</button>
+  </div>
+</form>
+
+<app-modal
+  [visible]="modal.visible"
+  [tipo]="modal.tipo"
+  [titulo]="modal.titulo"
+  [mensaje]="modal.mensaje"
+  (cerrar)="cerrarModal()"
+></app-modal>

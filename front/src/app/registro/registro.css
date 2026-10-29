@@ -1,0 +1,139 @@
+.form-registro {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* 2 columnas iguales */
+    gap: 15px; /* Espacio entre los elementos */
+    width: 65%; /* Amplié un poco el ancho total para que entren bien las 2 columnas */
+    max-width: 700px;
+    margin: 20px auto;
+    padding: 25px;
+    border: 1px solid var(--azul-oscuro);
+    border-radius: 10px;
+    background-color: var(--azul-oscuro);
+    color: var(--azul-claro);
+}
+
+.titulo-registro {
+    grid-column: span 2; /* El título ocupa todo el ancho */
+    text-align: center;
+    margin-bottom: 10px;
+    font-size: 1.5rem;
+}
+
+.label-input {
+    display: flex;
+    flex-direction: column;
+    justify-content: end;
+    align-items: flex-start;
+    width: 100%;
+    margin-bottom: 0; /* Lo manejamos con el gap del grid */
+}
+
+/* Contenedor que ocupa las 2 columnas del grid */
+.campo-completo {
+    grid-column: span 2;
+}
+
+.label-login {
+    margin-bottom: 4px;
+}
+
+.input-login {
+    border: none;
+    height: 35px; /* Aumentado para que sean más altos */
+    border-radius: 5px;
+    color: var(--azul-oscuro);
+    padding: 5px 10px; /* Más espacio interno */
+    margin: 3px 0px;
+    width: 100%;
+    box-sizing: border-box;
+    font-family: 'Fredoka', sans-serif;
+}
+
+.textarea-login {
+    height: auto;
+    resize: vertical;
+}
+
+/* Input de archivo */
+.input-file {
+    width: 100%;
+    box-sizing: border-box;
+    margin: 3px 0;
+    color: var(--azul-claro); /* color del texto "Ningún archivo seleccionado" */
+    font-family: 'Fredoka', sans-serif;
+    font-size: 0.9rem;
+    cursor: pointer;
+}
+
+/* El botón "Elegir archivo" */
+.input-file::file-selector-button {
+    background-color: var(--azul-medio);
+    color: var(--azul-claro);
+    border: none;
+    border-radius: 5px;
+    padding: 8px 16px;
+    margin-right: 12px;
+    font-family: 'Fredoka', sans-serif;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: opacity 0.3s;
+}
+
+.input-file::file-selector-button:hover {
+    opacity: 0.9;
+}
+
+.btn-login {
+    grid-column: span 2; /* El botón principal ocupa todo el ancho */
+    background-color: var(--azul-medio);
+    color: var(--azul-claro);
+    border-radius: 5px;
+    padding: 12px;
+    border: none;
+    width: 100%;
+    cursor: pointer;
+    font-family: 'Fredoka', sans-serif;
+    margin-top: 10px;
+}
+
+.btn-login:hover {
+    opacity: 0.9;
+    transition: 0.3s;
+}
+
+.registro-container {
+    grid-column: span 2; /* El contenedor inferior ocupa todo el ancho */
+    display: flex;
+    flex-direction: column;
+    align-items: center; 
+    margin-top: 10px;
+    width: 100%;
+}
+
+.texto-pregunta {
+    text-align: center;
+    margin-bottom: 8px;
+    color: var(--azul-claro);
+}
+
+.btn-secundario {
+    width: auto; 
+    padding: 8px 20px; 
+    background-color: var(--azul-medio); 
+    color: var(--azul-claro);
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-family: 'Fredoka', sans-serif;
+}
+
+.btn-secundario:hover {
+    opacity: 0.9;
+}
+
+.error {
+    color: #ff8080;
+    font-size: 11px;
+    margin-top: 2px;
+    width: 100%;
+}

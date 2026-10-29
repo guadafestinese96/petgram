@@ -1,0 +1,118 @@
+.perfil {
+    display: flex;
+    justify-content: center;
+    padding: 30px 15px;
+}
+
+.perfil-card {
+    width: 100%;
+    max-width: 420px;
+    background-color: white;
+    border: 1px solid var(--azul-oscuro);
+    border-radius: 12px;
+    padding: 28px 24px;
+    text-align: center;
+    color: var(--azul-oscuro);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.perfil-foto {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid var(--azul-medio);
+}
+
+.perfil-inicial {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+    background-color: var(--azul-medio);
+    color: var(--azul-claro);
+    font-size: 3rem;
+    font-weight: 600;
+}
+
+.perfil-nombre {
+    margin: 12px 0 2px;
+    font-size: 1.4rem;
+}
+
+.perfil-usuario {
+    margin: 0 0 8px;
+    opacity: 0.65;
+}
+
+.perfil-badge {
+    display: inline-block;
+    padding: 3px 14px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    background-color: var(--azul-claro);
+    border: 1px solid var(--azul-medio);
+    color: var(--azul-medio);
+    text-transform: capitalize;
+}
+
+.perfil-badge.admin {
+    background-color: var(--azul-oscuro);
+    border-color: var(--azul-oscuro);
+    color: var(--azul-claro);
+}
+
+.perfil-descripcion {
+    margin: 16px 0;
+    font-size: 0.95rem;
+    line-height: 1.4;
+}
+
+.perfil-datos {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin: 0 0 20px;
+    text-align: left;
+}
+
+.perfil-datos div {
+    background-color: var(--azul-claro);
+    border-radius: 8px;
+    padding: 8px 12px;
+}
+
+.perfil-datos dt {
+    font-size: 0.75rem;
+    opacity: 0.6;
+}
+
+.perfil-datos dd {
+    margin: 0;
+    font-weight: 500;
+    word-break: break-all;
+}
+
+.perfil-acciones {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.btn-perfil {
+    background-color: var(--azul-medio);
+    color: var(--azul-claro);
+    border: none;
+    border-radius: 6px;
+    padding: 9px 18px;
+    font-family: 'Fredoka', sans-serif;
+    cursor: pointer;
+    transition: opacity 0.2s;
+}
+
+.btn-perfil:hover { opacity: 0.9; }
+
+.btn-salir {
+    background-color: var(--azul-oscuro);
+}

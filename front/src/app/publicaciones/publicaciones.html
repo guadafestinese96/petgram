@@ -1,0 +1,52 @@
+<section class="publicaciones">
+
+  @for (pub of publicaciones; track pub.id) {
+    <article class="card-publicacion">
+
+      <!-- Cabecera: avatar + usuario + fecha -->
+      <header class="card-header">
+        <img [src]="pub.avatar" [alt]="'Avatar de ' + pub.usuario" class="card-avatar" />
+        <div class="card-header-texto">
+          <span class="card-usuario">{{ pub.usuario }}</span>
+          <small class="card-fecha">{{ pub.fecha }}</small>
+        </div>
+      </header>
+
+      <!-- Imagen (doble click = like) -->
+      <div class="card-imagen-contenedor" (dblclick)="likeConDobleClick(pub)">
+        <img [src]="pub.imagen" [alt]="'Publicación de ' + pub.usuario" class="card-imagen" />
+
+        @if (pub.mostrarPaw) {
+          <fa-icon [icon]="faPaw" class="paw-grande"></fa-icon>
+        }
+      </div>
+
+      <!-- Acciones: like con huellita + comentarios -->
+      <div class="card-acciones">
+        <button
+          type="button"
+          class="btn-accion btn-like"
+          [class.liked]="pub.liked"
+          (click)="toggleLike(pub)"
+          [attr.aria-label]="pub.liked ? 'Quitar me gusta' : 'Dar me gusta'"
+          [attr.aria-pressed]="pub.liked"
+        >
+          <fa-icon [icon]="faPaw"></fa-icon>
+        </button>
+
+        <button type="button" class="btn-accion" aria-label="Comentar">
+          <fa-icon [icon]="faComment"></fa-icon>
+        </button>
+      </div>
+
+      <!-- Contador y descripción -->
+      <p class="card-likes">{{ pub.likes }} {{ pub.likes === 1 ? 'huellita' : 'huellitas' }}</p>
+
+      <p class="card-descripcion">
+        <strong>{{ pub.usuario }}</strong> {{ pub.descripcion }}
+      </p>
+
+    </article>
+  }
+
+</section>

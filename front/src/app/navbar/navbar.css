@@ -1,0 +1,59 @@
+.navbar{
+    display: flex;
+    justify-content: space-between;
+    align-items:center;
+    background-color: var(--azul-oscuro);
+    box-shadow: 0 2px 10px var(--azul-medio);
+    padding: 0px 15px;
+}
+
+.logo{
+    filter: drop-shadow(2px 2px 15px var(--azul-medio));
+}
+
+.logo-img{
+    height:100px;
+    width: auto;
+}
+
+/* Los <button> se usan por accesibilidad (teclado), pero se ven igual que antes */
+.boton-nav{
+    background: none;
+    border: none;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.usuario-img, .camara-img{
+    color: var(--azul-claro);
+    font-size: 25px;
+    border-radius: 100%;
+    padding: 7px;
+    background-color: var(--azul-medio);
+}
+
+.usuario-img:hover, .camara-img:hover{
+    color: var(--azul-medio);
+    cursor:pointer;
+    border-color: var(--azul-medio);
+    transition: 1s;
+    background-color: var(--azul-claro);
+}
+
+/* Foto de perfil: mismo tamaño que los íconos (25px + 7px de padding a cada lado) */
+.usuario-foto{
+    width: 39px;
+    height: 39px;
+    border-radius: 100%;
+    object-fit: cover;
+    border: 2px solid var(--azul-medio);
+    box-sizing: border-box;
+    transition: 0.3s;
+}
+
+.usuario-foto:hover{
+    border-color: var(--azul-claro);
+    transform: scale(1.08);
+}

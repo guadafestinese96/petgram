@@ -1,0 +1,17 @@
+<nav class="navbar">
+    <div class="logo">
+        <img src="LOGO-PETGRAM-REDONDO.png" alt="logo" class="logo-img">
+    </div>
+
+    <button type="button" class="boton-nav" (click)="redirigirPublicaciones()" aria-label="Ir a publicaciones">
+        <fa-icon [icon]="faCamera" class="camara-img"></fa-icon>
+    </button>
+
+    <button type="button" class="boton-nav" (click)="redirigirSegunSesion()" aria-label="Ir a mi perfil">
+        @if (imagenUrl) {
+            <img [src]="imagenUrl" alt="Mi foto de perfil" class="usuario-foto">
+        } @else {
+            <fa-icon [icon]="faUser" class="usuario-img"></fa-icon>
+        }
+    </button>
+</nav>

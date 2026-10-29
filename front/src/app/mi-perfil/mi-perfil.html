@@ -1,0 +1,42 @@
+<section class="perfil">
+  @if (usuario) {
+    <article class="perfil-card">
+
+      @if (imagenUrl) {
+        <img [src]="imagenUrl" [alt]="'Foto de perfil de ' + usuario.nombreUsuario" class="perfil-foto" />
+      } @else {
+        <div class="perfil-foto perfil-inicial">{{ usuario.nombre.charAt(0).toUpperCase() }}</div>
+      }
+
+      <h2 class="perfil-nombre">{{ usuario.nombre }} {{ usuario.apellido }}</h2>
+      <p class="perfil-usuario">&#64;{{ usuario.nombreUsuario }}</p>
+      <span class="perfil-badge" [class.admin]="usuario.perfil === 'administrador'">{{ usuario.perfil }}</span>
+
+      <p class="perfil-descripcion">{{ usuario.descripcionBreve }}</p>
+
+      <dl class="perfil-datos">
+        <div>
+          <dt>Correo</dt>
+          <dd>{{ usuario.correo }}</dd>
+        </div>
+        <div>
+          <dt>Fecha de nacimiento</dt>
+          <!-- 'UTC' evita que la fecha se corra un día por la zona horaria -->
+          <dd>{{ usuario.fechaNacimiento | date: 'dd/MM/yyyy' : 'UTC' }}</dd>
+        </div>
+      </dl>
+
+      <div class="perfil-acciones">
+        <button type="button" class="btn-perfil" routerLink="/publicaciones">Ver publicaciones</button>
+        <button type="button" class="btn-perfil btn-salir" (click)="cerrarSesion()">Cerrar sesión</button>
+      </div>
+    </article>
+
+    <!-- Sprint #2: acá van las últimas 3 publicaciones con sus comentarios -->
+  } @else {
+    <article class="perfil-card">
+      <h2 class="perfil-nombre">No hay una sesión iniciada</h2>
+      <button type="button" class="btn-perfil" routerLink="/login">Ir al login</button>
+    </article>
+  }
+</section>
