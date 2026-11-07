@@ -25,6 +25,11 @@ export class PublicacionesService {
     return this.http.get<ListadoPublicaciones>(this.url, { params });
   }
 
+  // Detalle de una publicación (página "publicación")
+  obtener(id: string): Observable<Publicacion> {
+    return this.http.get<Publicacion>(`${this.url}/${id}`);
+  }
+
   // multipart/form-data: titulo, mensaje e imagen (opcional)
   crear(formData: FormData): Observable<Publicacion> {
     return this.http.post<Publicacion>(this.url, formData);

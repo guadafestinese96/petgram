@@ -1,0 +1,102 @@
+<section class="comentarios" [class.compacto]="compacto()">
+
+  <header class="comentarios-header">
+    <h4 class="comentarios-titulo">{{ total() | plural: 'comentario' }}</h4>
+    @if (linkPublicacion()) {
+      <a class="link-detalle" [routerLink]="['/publicacion', publicacionId()]">Ver publicación</a>
+    }
+  </header>
+
+  <!-- Nuevo comentario -->
+  <form class="nuevo" (ngSubmit)="enviar()">
+    <textarea
+      class="nuevo-input"
+      [formControl]="nuevo"
+      rows="1"
+      [attr.maxlength]="maxCaracteres"
+      placeholder="Escribí un comentario..."
+      aria-label="Escribí un comentario"
+      (keydown.enter)="enterEnNuevo($event)"
+    ></textarea>
+    <button type="submit" class="btn-enviar" [disabled]="nuevo.invalid || enviando()" aria-label="Publicar comentario">
+      <fa-icon [icon]="faPaperPlane"></fa-icon>
+    </button>
+  </form>
+  @if (nuevo.touched && nuevo.hasError('maxlength')) {
+    <small class="error">Máximo {{ maxCaracteres }} caracteres.</small>
+  }
+
+  <!-- Listado -->
+  @if (cargando() && comentarios().length === 0) {
+    <p class="estado">Cargando comentarios...</p>
+  } @else if (comentarios().length === 0) {
+    <p class="estado">Todavía no hay comentarios. ¡Dejá el primero!</p>
+  } @else {
+    <ul class="lista">
+      @for (comentario of comentarios(); track comentario._id) {
+        <li class="comentario">
+          @if (comentario.usuario.imagenPerfil | urlImagen; as avatar) {
+            <img [src]="avatar" appImagenRespaldo [alt]="'Avatar de ' + comentario.usuario.nombreUsuario" class="avatar" />
+          } @else {
+            <div class="avatar avatar-inicial">{{ comentario.usuario.nombreUsuario.charAt(0).toUpperCase() }}</div>
+          }
+
+          <div class="cuerpo">
+            <div class="meta">
+              <span class="autor">{{ comentario.usuario.nombreUsuario }}</span>
+              <time class="fecha" [attr.datetime]="comentario.createdAt" [title]="comentario.createdAt | date: 'dd/MM/yyyy HH:mm'">
+                {{ comentario.createdAt | tiempoRelativo }}
+              </time>
+              @if (comentario.modificado) {
+                <span class="editado" [title]="'Editado ' + (comentario.updatedAt | date: 'dd/MM/yyyy HH:mm')">(editado)</span>
+              }
+              @if (esMio(comentario) && editandoId() !== comentario._id) {
+                <button type="button" class="btn-editar" (click)="empezarEdicion(comentario)" aria-label="Editar comentario">
+                  <fa-icon [icon]="faPen"></fa-icon>
+                </button>
+              }
+            </div>
+
+            @if (editandoId() === comentario._id) {
+              <div class="edicion">
+                <textarea
+                  class="nuevo-input"
+                  [formControl]="edicion"
+                  rows="2"
+                  [attr.maxlength]="maxCaracteres"
+                  appAutofocus
+                  [cursorAlFinal]="true"
+                  aria-label="Editar comentario"
+                  (keydown.enter)="enterEnEdicion($event, comentario)"
+                  (keydown.escape)="cancelarEdicion()"
+                ></textarea>
+                <div class="edicion-botones">
+                  <button type="button" class="btn-chico btn-chico-secundario" (click)="cancelarEdicion()">Cancelar</button>
+                  <button type="button" class="btn-chico" [disabled]="edicion.invalid || guardando()" (click)="guardarEdicion(comentario)">
+                    {{ guardando() ? 'Guardando...' : 'Guardar' }}
+                  </button>
+                </div>
+              </div>
+            } @else {
+              <p class="mensaje">{{ comentario.mensaje }}</p>
+            }
+          </div>
+        </li>
+      }
+    </ul>
+
+    @if (restantes > 0) {
+      <button type="button" class="btn-mas" [disabled]="cargando()" (click)="cargar()">
+        {{ cargando() ? 'Cargando...' : 'Cargar más (' + restantes + ')' }}
+      </button>
+    }
+  }
+</section>
+
+<app-modal
+  [visible]="modalError().visible"
+  [tipo]="'error'"
+  [titulo]="modalError().titulo"
+  [mensaje]="modalError().mensaje"
+  (cerrar)="cerrarError()"
+></app-modal>

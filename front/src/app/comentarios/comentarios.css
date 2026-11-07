@@ -1,0 +1,223 @@
+:host {
+    display: block;
+}
+
+.comentarios {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    color: var(--azul-oscuro);
+}
+
+.comentarios-header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.comentarios-titulo {
+    font-size: 1rem;
+}
+
+.link-detalle {
+    font-size: 0.85rem;
+    color: var(--azul-medio);
+    text-decoration: none;
+}
+
+.link-detalle:hover { text-decoration: underline; }
+
+/* ---------- NUEVO COMENTARIO ---------- */
+.nuevo {
+    display: flex;
+    align-items: flex-end;
+    gap: 8px;
+}
+
+.nuevo-input {
+    flex: 1;
+    width: 100%;
+    box-sizing: border-box;
+    resize: vertical;
+    min-height: 38px;
+    border: 1px solid rgba(5, 10, 48, 0.25);
+    border-radius: 10px;
+    padding: 9px 12px;
+    font-family: 'Fredoka', sans-serif;
+    font-size: 0.9rem;
+    color: var(--azul-oscuro);
+    background-color: var(--azul-claro);
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.nuevo-input:focus {
+    outline: none;
+    border-color: var(--azul-medio);
+    box-shadow: 0 0 0 3px rgba(35, 61, 255, 0.15);
+}
+
+.btn-enviar {
+    flex-shrink: 0;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    border: none;
+    background-color: var(--azul-medio);
+    color: var(--azul-claro);
+    cursor: pointer;
+    transition: transform 0.15s, opacity 0.2s;
+}
+
+.btn-enviar:hover:not(:disabled) { transform: scale(1.08); }
+.btn-enviar:disabled { opacity: 0.4; cursor: not-allowed; }
+
+.error {
+    color: #e5484d;
+    font-size: 0.75rem;
+}
+
+.estado {
+    font-size: 0.9rem;
+    opacity: 0.65;
+    text-align: center;
+    padding: 6px 0;
+}
+
+/* ---------- LISTA ---------- */
+.lista {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.comentario {
+    display: flex;
+    gap: 10px;
+    animation: aparecer 0.25s ease;
+}
+
+.avatar {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--azul-medio);
+    flex-shrink: 0;
+    box-sizing: border-box;
+}
+
+.avatar-inicial {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--azul-medio);
+    color: var(--azul-claro);
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.cuerpo {
+    flex: 1;
+    min-width: 0;
+    background-color: var(--azul-claro);
+    border-radius: 0 12px 12px 12px;
+    padding: 8px 12px;
+}
+
+.meta {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 6px;
+    font-size: 0.8rem;
+}
+
+.autor { font-weight: 600; }
+.fecha { opacity: 0.55; }
+
+.editado {
+    font-style: italic;
+    opacity: 0.6;
+}
+
+.btn-editar {
+    margin-left: auto;
+    background: none;
+    border: none;
+    color: var(--azul-oscuro);
+    opacity: 0.4;
+    cursor: pointer;
+    padding: 2px 4px;
+}
+
+.btn-editar:hover { opacity: 1; color: var(--azul-medio); }
+
+.mensaje {
+    margin-top: 3px;
+    font-size: 0.9rem;
+    line-height: 1.4;
+    white-space: pre-line;
+    word-break: break-word;
+}
+
+.edicion {
+    margin-top: 6px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.edicion-botones {
+    display: flex;
+    justify-content: flex-end;
+    gap: 6px;
+}
+
+.btn-chico {
+    border-radius: 6px;
+    padding: 5px 12px;
+    font-family: 'Fredoka', sans-serif;
+    font-size: 0.8rem;
+    cursor: pointer;
+    background-color: var(--azul-medio);
+    color: var(--azul-claro);
+    border: 1px solid var(--azul-medio);
+}
+
+.btn-chico:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.btn-chico-secundario {
+    background: transparent;
+    color: var(--azul-oscuro);
+    border-color: rgba(5, 10, 48, 0.35);
+}
+
+.btn-mas {
+    align-self: center;
+    background: transparent;
+    border: 1px solid var(--azul-medio);
+    color: var(--azul-medio);
+    border-radius: 20px;
+    padding: 7px 20px;
+    font-family: 'Fredoka', sans-serif;
+    cursor: pointer;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.btn-mas:hover:not(:disabled) {
+    background-color: var(--azul-medio);
+    color: var(--azul-claro);
+}
+
+/* ---------- VERSIÓN COMPACTA (Mi perfil) ---------- */
+.compacto { gap: 8px; }
+.compacto .comentarios-titulo { font-size: 0.9rem; }
+.compacto .avatar { width: 28px; height: 28px; }
+.compacto .mensaje { font-size: 0.85rem; }
+
+@keyframes aparecer {
+    from { opacity: 0; transform: translateY(-4px); }
+    to   { opacity: 1; transform: translateY(0); }
+}

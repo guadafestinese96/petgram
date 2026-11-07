@@ -1,0 +1,19 @@
+<section class="cargando" aria-live="polite">
+  <img src="LOGO-PETGRAM-REDONDO.png" alt="Petgram" class="cargando-logo" />
+
+  @if (error()) {
+    <div class="cargando-error">
+      <h2>No pudimos conectarnos</h2>
+      <p>{{ error() }}</p>
+      <div class="cargando-botones">
+        <button type="button" class="btn-cargando" (click)="validarSesion()">Reintentar</button>
+        <button type="button" class="btn-cargando btn-secundario" (click)="irAlLogin()">Ir al login</button>
+      </div>
+    </div>
+  } @else {
+    <div class="spinner" role="progressbar" aria-label="Cargando">
+      <span></span><span></span><span></span><span></span>
+    </div>
+    <p class="cargando-texto">{{ mensaje() }}</p>
+  }
+</section>

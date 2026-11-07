@@ -1,0 +1,102 @@
+@if (visible()) {
+  <div class="fondo">
+    <div class="caja" role="dialog" aria-modal="true" aria-label="Nuevo usuario">
+      <header class="caja-header">
+        <h3>Registrar nuevo usuario</h3>
+        <button type="button" class="btn-cerrar" (click)="cancelar()" aria-label="Cerrar">
+          <fa-icon [icon]="faXmark"></fa-icon>
+        </button>
+      </header>
+
+      <form [formGroup]="form" (ngSubmit)="enviar()" class="formulario">
+
+        <!-- Perfil: radio buttons -->
+        <fieldset class="perfil campo-completo">
+          <legend>Perfil del nuevo usuario</legend>
+          <label class="radio">
+            <input type="radio" formControlName="perfil" value="usuario" />
+            <span>Usuario</span>
+          </label>
+          <label class="radio">
+            <input type="radio" formControlName="perfil" value="administrador" />
+            <span>Administrador</span>
+          </label>
+        </fieldset>
+
+        <label class="campo">
+          <span>Nombre</span>
+          <input type="text" formControlName="nombre" class="input" appAutofocus />
+          @if (invalido('nombre')) { <small class="error">El nombre es obligatorio.</small> }
+        </label>
+
+        <label class="campo">
+          <span>Apellido</span>
+          <input type="text" formControlName="apellido" class="input" />
+          @if (invalido('apellido')) { <small class="error">El apellido es obligatorio.</small> }
+        </label>
+
+        <label class="campo">
+          <span>Correo electrónico</span>
+          <input type="email" formControlName="correo" class="input" />
+          @if (invalido('correo')) { <small class="error">Ingresá un correo válido.</small> }
+        </label>
+
+        <label class="campo">
+          <span>Nombre de usuario</span>
+          <input type="text" formControlName="nombreUsuario" class="input" />
+          @if (invalido('nombreUsuario', 'required')) { <small class="error">Es obligatorio.</small> }
+          @if (invalido('nombreUsuario', 'minlength')) { <small class="error">Al menos 3 caracteres.</small> }
+          @if (invalido('nombreUsuario', 'pattern')) { <small class="error">Solo letras, números, _ y puntos.</small> }
+        </label>
+
+        <label class="campo">
+          <span>Contraseña</span>
+          <input type="password" formControlName="password" class="input" autocomplete="new-password" />
+          @if (invalido('password', 'required')) { <small class="error">La contraseña es obligatoria.</small> }
+          @if (invalido('password', 'minlength')) { <small class="error">Al menos 8 caracteres.</small> }
+          @if (invalido('password', 'pattern')) { <small class="error">Una mayúscula y un número como mínimo.</small> }
+        </label>
+
+        <label class="campo">
+          <span>Repetir contraseña</span>
+          <input type="password" formControlName="repetirPassword" class="input" autocomplete="new-password" />
+          @if (form.get('repetirPassword')?.touched && form.hasError('mismatch')) {
+            <small class="error">Las contraseñas no coinciden.</small>
+          }
+        </label>
+
+        <label class="campo">
+          <span>Fecha de nacimiento</span>
+          <input type="date" formControlName="fechaNacimiento" class="input" />
+          @if (invalido('fechaNacimiento')) { <small class="error">La fecha es obligatoria.</small> }
+        </label>
+
+        <label class="campo">
+          <span>Imagen de perfil (opcional)</span>
+          <input type="file" accept="image/*" class="input-file" (change)="onFileSelected($event)" />
+        </label>
+
+        <label class="campo campo-completo">
+          <span>Descripción breve</span>
+          <textarea formControlName="descripcionBreve" class="input" rows="2" maxlength="150"></textarea>
+          @if (invalido('descripcionBreve')) { <small class="error">Escribí una descripción (máx. 150).</small> }
+        </label>
+
+        <div class="acciones campo-completo">
+          <button type="button" class="btn btn-secundario" (click)="cancelar()">Cancelar</button>
+          <button type="submit" class="btn" [disabled]="form.invalid || enviando()">
+            {{ enviando() ? 'Creando...' : 'Crear ' + (form.controls.perfil.value === 'administrador' ? 'administrador' : 'usuario') }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+}
+
+<app-modal
+  [visible]="!!error()"
+  [tipo]="'error'"
+  [titulo]="'No se pudo crear el usuario'"
+  [mensaje]="error() ?? ''"
+  (cerrar)="error.set(null)"
+></app-modal>

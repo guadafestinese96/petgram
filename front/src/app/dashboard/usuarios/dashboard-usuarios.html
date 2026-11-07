@@ -1,0 +1,112 @@
+<section class="usuarios">
+
+  <!-- Resumen -->
+  <div class="resumen">
+    <div class="resumen-item"><strong>{{ resumen().total }}</strong><span>usuarios</span></div>
+    <div class="resumen-item"><strong>{{ resumen().activos }}</strong><span>habilitados</span></div>
+    <div class="resumen-item"><strong>{{ resumen().total - resumen().activos }}</strong><span>deshabilitados</span></div>
+    <div class="resumen-item"><strong>{{ resumen().admins }}</strong><span>administradores</span></div>
+  </div>
+
+  <!-- Barra de herramientas -->
+  <div class="barra">
+    <input
+      type="search"
+      class="buscador"
+      placeholder="Buscar por nombre, usuario o correo..."
+      aria-label="Buscar usuarios"
+      [value]="busqueda()"
+      (input)="busqueda.set($any($event.target).value)"
+    />
+    <select class="filtro" aria-label="Filtrar usuarios" [value]="filtro()" (change)="cambiarFiltro($any($event.target).value)">
+      <option value="todos">Todos</option>
+      <option value="activos">Habilitados</option>
+      <option value="deshabilitados">Deshabilitados</option>
+      <option value="administradores">Administradores</option>
+    </select>
+    <button type="button" class="btn-nuevo" (click)="creando.set(true)">
+      <fa-icon [icon]="faUserPlus"></fa-icon> Nuevo usuario
+    </button>
+  </div>
+
+  <!-- Listado -->
+  @if (cargando() && usuarios().length === 0) {
+    <p class="estado">Cargando usuarios...</p>
+  } @else if (filtrados().length === 0) {
+    <p class="estado">No hay usuarios que coincidan con la búsqueda.</p>
+  } @else {
+    <p class="contador">Mostrando {{ filtrados().length | plural: 'usuario' }}</p>
+    <ul class="lista">
+      @for (u of filtrados(); track u._id) {
+        <li class="fila" [class.deshabilitado]="!u.activo">
+          @if (u.imagenPerfil | urlImagen; as foto) {
+            <img [src]="foto" appImagenRespaldo [alt]="'Foto de ' + u.nombreUsuario" class="avatar" />
+          } @else {
+            <div class="avatar avatar-inicial">{{ u.nombre.charAt(0).toUpperCase() }}</div>
+          }
+
+          <div class="datos">
+            <span class="nombre">{{ u.nombre }} {{ u.apellido }} @if (u._id === idActual()) {<em>(vos)</em>}</span>
+            <span class="detalle">&#64;{{ u.nombreUsuario }} · {{ u.correo }}</span>
+            @if (u.createdAt) {
+              <span class="detalle">Alta: {{ u.createdAt | tiempoRelativo }}</span>
+            }
+          </div>
+
+          <div class="etiquetas">
+            <span class="badge" [class.badge-admin]="u.perfil === 'administrador'">{{ u.perfil }}</span>
+            <span class="badge" [class.badge-ok]="u.activo" [class.badge-off]="!u.activo">
+              {{ u.activo ? 'Habilitado' : 'Deshabilitado' }}
+            </span>
+          </div>
+
+          <div class="acciones">
+            @if (u._id !== idActual()) {
+              <button
+                type="button"
+                class="btn-estado"
+                [class.btn-habilitar]="!u.activo"
+                [disabled]="procesandoId() === u._id"
+                (click)="pedirConfirmacion(u)"
+              >
+                @if (procesandoId() === u._id) {
+                  Procesando...
+                } @else {
+                  {{ u.activo ? 'Deshabilitar' : 'Habilitar' }}
+                }
+              </button>
+            }
+          </div>
+        </li>
+      }
+    </ul>
+  }
+</section>
+
+<!-- Formulario de alta -->
+<app-form-nuevo-usuario
+  [visible]="creando()"
+  (cerrar)="creando.set(false)"
+  (creado)="onCreado($event)"
+></app-form-nuevo-usuario>
+
+<!-- Confirmación de alta / baja lógica -->
+<app-modal
+  [visible]="!!confirmacion()"
+  [tipo]="'info'"
+  [titulo]="confirmacion()?.habilitar ? '¿Habilitar usuario?' : '¿Deshabilitar usuario?'"
+  [mensaje]="mensajeConfirmacion()"
+  [textoBoton]="confirmacion()?.habilitar ? 'Habilitar' : 'Deshabilitar'"
+  [textoCancelar]="'Cancelar'"
+  [peligro]="!confirmacion()?.habilitar"
+  (cerrar)="confirmarCambio()"
+  (cancelar)="confirmacion.set(null)"
+></app-modal>
+
+<app-modal
+  [visible]="modal().visible"
+  [tipo]="modal().tipo"
+  [titulo]="modal().titulo"
+  [mensaje]="modal().mensaje"
+  (cerrar)="cerrarModal()"
+></app-modal>

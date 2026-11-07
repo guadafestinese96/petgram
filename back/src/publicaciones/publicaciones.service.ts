@@ -10,6 +10,7 @@ import type { UsuarioToken } from '../auth/usuario-token.js';
 import { guardarImagen } from '../common/imagenes.js';
 import { CreatePublicacionDto } from './dto/create-publicacion.dto.js';
 import { QueryPublicacionesDto } from './dto/query-publicaciones.dto.js';
+import { Comentario } from './entities/comentario.entity.js';
 import { Publicacion } from './entities/publicacion.entity.js';
 
 // Datos del autor que se devuelven junto a cada publicación
@@ -23,6 +24,7 @@ interface PublicacionPlana {
   usuario: unknown;
   likes: Types.ObjectId[];
   cantidadLikes: number;
+  cantidadComentarios?: number;
   activa: boolean;
   createdAt: Date;
   updatedAt: Date;
@@ -34,6 +36,8 @@ export class PublicacionesService {
   constructor(
     @InjectModel(Publicacion.name)
     private publicacionModel: Model<Publicacion>,
+    @InjectModel(Comentario.name)
+    private comentarioModel: Model<Comentario>,
   ) {}
 
   async crear(
@@ -90,6 +94,21 @@ export class PublicacionesService {
     };
   }
 
+  // GET /publicaciones/:id => una sola publicación (página "publicación")
+  async obtener(id: string, usuarioId: string) {
+    const publicacion = await this.publicacionModel
+      .findOne({ _id: id, activa: true })
+      .populate('usuario', CAMPOS_AUTOR)
+      .lean();
+    if (!publicacion) {
+      throw new NotFoundException('La publicación no existe.');
+    }
+    return this.formatear(
+      publicacion as unknown as PublicacionPlana,
+      usuarioId,
+    );
+  }
+
   // Baja lógica: solo el dueño o un administrador
   async eliminar(id: string, usuario: UsuarioToken) {
     const publicacion = await this.publicacionModel.findOne({
@@ -109,6 +128,13 @@ export class PublicacionesService {
 
     publicacion.activa = false;
     await publicacion.save();
+
+    // Sus comentarios también dejan de estar disponibles
+    await this.comentarioModel.updateMany(
+      { publicacion: publicacion._id },
+      { $set: { activo: false } },
+    );
+
     return { mensaje: 'Publicación eliminada correctamente.' };
   }
 
@@ -161,6 +187,7 @@ export class PublicacionesService {
     const { likes, activa, __v, ...resto } = publicacion;
     return {
       ...resto,
+      cantidadComentarios: resto.cantidadComentarios ?? 0,
       meGusta: likes.some((id) => id.toString() === usuarioId),
     };
   }

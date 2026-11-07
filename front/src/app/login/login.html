@@ -5,7 +5,7 @@
   <!-- Correo o nombre de usuario -->
   <div class="label-input">
     <label class="label-login">Correo o nombre de usuario:</label>
-    <input type="text" formControlName="identificador" class="input-login" autocomplete="username" />
+    <input type="text" formControlName="identificador" class="input-login" autocomplete="username" appAutofocus />
     @if (loginForm.get('identificador')?.touched && loginForm.get('identificador')?.invalid) {
       <div class="error">Ingresá tu correo o nombre de usuario.</div>
     }

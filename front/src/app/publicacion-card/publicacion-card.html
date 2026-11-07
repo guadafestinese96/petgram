@@ -2,28 +2,40 @@
 
   <!-- Cabecera: avatar + usuario + fecha + eliminar -->
   <header class="card-header">
-    @if (avatarUrl()) {
-      <img [src]="avatarUrl()" [alt]="'Avatar de ' + publicacion().usuario.nombreUsuario" class="card-avatar" />
+    @if (publicacion().usuario.imagenPerfil | urlImagen; as avatar) {
+      <img [src]="avatar" appImagenRespaldo [alt]="'Avatar de ' + publicacion().usuario.nombreUsuario" class="card-avatar" />
     } @else {
       <div class="card-avatar card-avatar-inicial">{{ inicial() }}</div>
     }
 
     <div class="card-header-texto">
       <span class="card-usuario">{{ publicacion().usuario.nombreUsuario }}</span>
-      <small class="card-fecha">{{ publicacion().createdAt | date: 'dd/MM/yyyy HH:mm' }}</small>
+      <time class="card-fecha" [attr.datetime]="publicacion().createdAt" [title]="publicacion().createdAt | date: 'dd/MM/yyyy HH:mm'">
+        {{ publicacion().createdAt | tiempoRelativo }}
+      </time>
     </div>
 
     @if (puedeEliminar()) {
-      <button type="button" class="btn-eliminar" (click)="pedirConfirmacion()" aria-label="Eliminar publicación">
+      <button
+        type="button"
+        class="btn-eliminar"
+        [class.btn-eliminar-admin]="bajaComoAdmin()"
+        (click)="pedirConfirmacion()"
+        [attr.aria-label]="bajaComoAdmin() ? 'Dar de baja publicación (administrador)' : 'Eliminar publicación'"
+        [title]="bajaComoAdmin() ? 'Dar de baja (administrador)' : 'Eliminar'"
+      >
+        @if (bajaComoAdmin()) {
+          <fa-icon [icon]="faShield" class="icono-admin"></fa-icon>
+        }
         <fa-icon [icon]="faTrash"></fa-icon>
       </button>
     }
   </header>
 
   <!-- Imagen (opcional). Doble click = me gusta -->
-  @if (imagenUrl()) {
+  @if (publicacion().imagen | urlImagen; as imagen) {
     <div class="card-imagen-contenedor" (dblclick)="dobleClick()">
-      <img [src]="imagenUrl()" [alt]="publicacion().titulo" class="card-imagen" />
+      <img [src]="imagen" appImagenRespaldo [alt]="publicacion().titulo" class="card-imagen" />
 
       @if (mostrarPaw()) {
         <fa-icon [icon]="faPaw" class="paw-grande"></fa-icon>
@@ -44,15 +56,44 @@
     >
       <fa-icon [icon]="faPaw"></fa-icon>
     </button>
+
+    @if (!expandida()) {
+      <button type="button" class="btn-accion" (click)="irAlDetalle()" aria-label="Ver comentarios">
+        <fa-icon [icon]="faComment"></fa-icon>
+      </button>
+    }
   </div>
 
-  <p class="card-likes">{{ cantidadLikes() }} {{ cantidadLikes() === 1 ? 'huellita' : 'huellitas' }}</p>
+  <p class="card-likes">{{ cantidadLikes() | plural: 'huellita' }}</p>
 
   <!-- Contenido -->
   <div class="card-contenido">
-    <h3 class="card-titulo">{{ publicacion().titulo }}</h3>
+    <h3 class="card-titulo" [class.clickeable]="!expandida()" (click)="irAlDetalle()">{{ publicacion().titulo }}</h3>
     <p class="card-mensaje">{{ publicacion().mensaje }}</p>
+
+    @if (!expandida() && !mostrarComentarios()) {
+      <button type="button" class="link-comentarios" (click)="irAlDetalle()">
+        @if (cantidadComentarios() > 0) {
+          Ver {{ cantidadComentarios() === 1 ? 'el comentario' : 'los ' + cantidadComentarios() + ' comentarios' }}
+        } @else {
+          Comentar
+        }
+      </button>
+    }
   </div>
+
+  <!-- Comentarios dentro de la card (Mi perfil) -->
+  @if (mostrarComentarios()) {
+    <div class="card-comentarios">
+      <app-comentarios
+        [publicacionId]="publicacion()._id"
+        [porPagina]="3"
+        [compacto]="true"
+        [linkPublicacion]="true"
+        (totalCambio)="cantidadComentarios.set($event)"
+      ></app-comentarios>
+    </div>
+  }
 
 </article>
 
@@ -60,9 +101,9 @@
 <app-modal
   [visible]="confirmandoEliminar()"
   [tipo]="'info'"
-  [titulo]="'¿Eliminar publicación?'"
-  [mensaje]="'Esta acción no se puede deshacer.'"
-  [textoBoton]="'Eliminar'"
+  [titulo]="bajaComoAdmin() ? '¿Dar de baja esta publicación?' : '¿Eliminar publicación?'"
+  [mensaje]="mensajeConfirmacion()"
+  [textoBoton]="bajaComoAdmin() ? 'Dar de baja' : 'Eliminar'"
   [textoCancelar]="'Cancelar'"
   [peligro]="true"
   (cerrar)="confirmarEliminacion()"

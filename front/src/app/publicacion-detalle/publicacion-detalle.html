@@ -1,0 +1,38 @@
+<section class="detalle">
+
+  <a class="btn-volver" routerLink="/publicaciones">
+    <fa-icon [icon]="faArrowLeft"></fa-icon>
+    Volver a publicaciones
+  </a>
+
+  @if (cargando()) {
+    <p class="mensaje-estado">Cargando publicación...</p>
+  } @else if (noEncontrada()) {
+    <div class="mensaje-estado">
+      <h3>Esta publicación no está disponible</h3>
+      <p>Puede que haya sido eliminada o que el enlace no sea correcto.</p>
+    </div>
+  } @else if (error()) {
+    <div class="mensaje-estado">
+      <h3>No se pudo cargar la publicación</h3>
+      <p>{{ error() }}</p>
+    </div>
+  } @else {
+    @if (publicacion(); as pub) {
+      <app-publicacion-card [publicacion]="pub" [expandida]="true" (eliminada)="onEliminada()"></app-publicacion-card>
+
+      <div class="panel-comentarios">
+        <app-comentarios [publicacionId]="pub._id" [porPagina]="5"></app-comentarios>
+      </div>
+    }
+  }
+</section>
+
+<app-modal
+  [visible]="eliminadaOk()"
+  [tipo]="'exito'"
+  [titulo]="'Publicación dada de baja'"
+  [mensaje]="'La publicación y sus comentarios ya no están disponibles.'"
+  [textoBoton]="'Volver al listado'"
+  (cerrar)="volverAlListado()"
+></app-modal>

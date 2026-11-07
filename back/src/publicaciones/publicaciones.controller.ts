@@ -46,6 +46,15 @@ export class PublicacionesController {
     return this.publicacionesService.listar(query, usuario.sub);
   }
 
+  // GET /publicaciones/:id => detalle de una publicación
+  @Get(':id')
+  obtener(
+    @Param('id', ParseObjectIdPipe) id: string,
+    @UsuarioActual() usuario: UsuarioToken,
+  ) {
+    return this.publicacionesService.obtener(id, usuario.sub);
+  }
+
   // Baja lógica (dueño o administrador)
   @Delete(':id')
   eliminar(

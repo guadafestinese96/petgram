@@ -11,6 +11,7 @@ export interface Usuario {
   imagenPerfil?: string; // URL relativa: se le antepone API_URL
   perfil: PerfilUsuario;
   activo: boolean;
+  createdAt?: string;
 }
 
 export interface AuthResponse {

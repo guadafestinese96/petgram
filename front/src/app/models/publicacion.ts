@@ -15,6 +15,7 @@ export interface Publicacion {
   imagen?: string; // URL relativa: se le antepone API_URL
   usuario: AutorPublicacion;
   cantidadLikes: number;
+  cantidadComentarios: number;
   meGusta: boolean; // true si el usuario logueado ya dio me gusta
   createdAt: string;
 }

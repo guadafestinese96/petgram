@@ -1,0 +1,56 @@
+<article class="panel">
+  <header class="panel-header">
+    <div>
+      <h3 class="panel-titulo">{{ titulo() }}</h3>
+      @if (descripcion()) {
+        <p class="panel-descripcion">{{ descripcion() }}</p>
+      }
+    </div>
+    @if (datos(); as d) {
+      <div class="panel-total">
+        <strong>{{ d.total }}</strong>
+        <span>{{ textoTotal() }}</span>
+      </div>
+    }
+  </header>
+
+  <!-- Lapso de tiempo -->
+  <div class="rango">
+    <label class="fecha">
+      <span>Desde</span>
+      <input type="date" [value]="desde()" [max]="hasta() || hoy" (change)="desde.set($any($event.target).value)" />
+    </label>
+    <label class="fecha">
+      <span>Hasta</span>
+      <input type="date" [value]="hasta()" [min]="desde()" [max]="hoy" (change)="hasta.set($any($event.target).value)" />
+    </label>
+    <button type="button" class="btn-aplicar" [disabled]="cargando()" (click)="actualizar()">
+      {{ cargando() ? 'Cargando...' : 'Aplicar' }}
+    </button>
+    <div class="atajos">
+      <button type="button" (click)="usarUltimosDias(7)">7 días</button>
+      <button type="button" (click)="usarUltimosDias(30)">30 días</button>
+      <button type="button" (click)="usarUltimosDias(90)">90 días</button>
+    </div>
+  </div>
+
+  @if (error()) {
+    <p class="aviso aviso-error">{{ error() }}</p>
+  } @else {
+    @if (datos(); as d) {
+      @if (d.total === 0) {
+        <p class="aviso">No hay datos para el lapso elegido.</p>
+      } @else {
+        <app-grafico
+          [tipo]="tipo()"
+          [etiquetas]="d.etiquetas"
+          [valores]="d.valores"
+          [titulo]="titulo()"
+          [nombreSerie]="nombreSerie()"
+        ></app-grafico>
+      }
+    } @else {
+      <p class="aviso">Cargando datos...</p>
+    }
+  }
+</article>

@@ -25,6 +25,10 @@ export class Publicacion {
   @Prop({ type: Number, default: 0 })
   cantidadLikes: number;
 
+  // Se mantiene sincronizado al agregar comentarios (Sprint #3)
+  @Prop({ type: Number, default: 0 })
+  cantidadComentarios: number;
+
   // Baja lógica: false = eliminada (no se borra de la base)
   @Prop({ type: Boolean, default: true })
   activa: boolean;

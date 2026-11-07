@@ -1,2 +1,22 @@
 <app-navbar />
 <router-outlet />
+
+<!-- Aviso de sesión (a los 10 minutos de iniciar sesión: quedan 5) -->
+<app-modal
+  [visible]="sesion.mostrarAviso()"
+  [tipo]="'info'"
+  [titulo]="'Tu sesión está por vencer'"
+  [mensaje]="'Quedan 5 minutos de sesión. ¿Querés extenderla para seguir usando Petgram sin volver a iniciar sesión?'"
+  [textoBoton]="sesion.refrescando() ? 'Extendiendo...' : 'Sí, extender sesión'"
+  [textoCancelar]="'No, gracias'"
+  (cerrar)="sesion.extender()"
+  (cancelar)="sesion.rechazar()"
+></app-modal>
+
+<app-modal
+  [visible]="!!sesion.error()"
+  [tipo]="'error'"
+  [titulo]="'No se pudo extender la sesión'"
+  [mensaje]="sesion.error() ?? ''"
+  (cerrar)="sesion.cerrarError()"
+></app-modal>

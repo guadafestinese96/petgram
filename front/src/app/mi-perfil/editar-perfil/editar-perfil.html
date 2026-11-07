@@ -1,0 +1,65 @@
+@if (visible()) {
+  <div class="fondo">
+    <div class="caja" role="dialog" aria-modal="true" aria-label="Editar perfil">
+      <header class="caja-header">
+        <h3>Editar perfil</h3>
+        <button type="button" class="btn-cerrar" (click)="cerrar.emit()" aria-label="Cerrar">
+          <fa-icon [icon]="faXmark"></fa-icon>
+        </button>
+      </header>
+
+      <form [formGroup]="form" (ngSubmit)="guardar()" class="formulario">
+        <input #selector type="file" class="oculto" accept="image/*" (change)="onFileSelected($event)" />
+
+        <button type="button" class="foto" (click)="selector.click()" aria-label="Cambiar foto de perfil">
+          @if (previsualizacion() | urlImagen; as foto) {
+            <img [src]="foto" alt="Foto de perfil" class="foto-img" />
+          } @else {
+            <span class="foto-vacia">{{ form.controls.nombre.value.charAt(0).toUpperCase() || '?' }}</span>
+          }
+          <span class="foto-camara"><fa-icon [icon]="faCamera"></fa-icon></span>
+        </button>
+
+        <label class="campo">
+          <span>Nombre</span>
+          <input type="text" formControlName="nombre" class="input" maxlength="30" appAutofocus />
+          @if (form.controls.nombre.touched && form.controls.nombre.invalid) {
+            <small class="error">El nombre es obligatorio (máx. 30 caracteres).</small>
+          }
+        </label>
+
+        <label class="campo">
+          <span>Apellido</span>
+          <input type="text" formControlName="apellido" class="input" maxlength="30" />
+          @if (form.controls.apellido.touched && form.controls.apellido.invalid) {
+            <small class="error">El apellido es obligatorio (máx. 30 caracteres).</small>
+          }
+        </label>
+
+        <label class="campo">
+          <span>Descripción breve</span>
+          <textarea formControlName="descripcionBreve" class="input" rows="3" maxlength="150"></textarea>
+          <small class="contador">{{ form.controls.descripcionBreve.value.length }}/150</small>
+          @if (form.controls.descripcionBreve.touched && form.controls.descripcionBreve.invalid) {
+            <small class="error">Escribí una breve descripción (máx. 150 caracteres).</small>
+          }
+        </label>
+
+        <div class="acciones">
+          <button type="button" class="btn btn-secundario" (click)="cerrar.emit()">Cancelar</button>
+          <button type="submit" class="btn" [disabled]="form.invalid || guardando()">
+            {{ guardando() ? 'Guardando...' : 'Guardar cambios' }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+}
+
+<app-modal
+  [visible]="modal().visible"
+  [tipo]="modal().tipo"
+  [titulo]="modal().titulo"
+  [mensaje]="modal().mensaje"
+  (cerrar)="cerrarModal()"
+></app-modal>

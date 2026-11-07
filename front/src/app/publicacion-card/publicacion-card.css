@@ -171,3 +171,43 @@
     word-break: break-word;
     white-space: pre-line;
 }
+
+/* ---------- SPRINT 3 / 4 ---------- */
+.btn-eliminar-admin {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    color: #e5484d;
+    opacity: 0.75;
+}
+
+.icono-admin { font-size: 0.8rem; }
+
+.card-titulo.clickeable { cursor: pointer; }
+.card-titulo.clickeable:hover { color: var(--azul-medio); }
+
+.link-comentarios {
+    margin-top: 8px;
+    background: none;
+    border: none;
+    padding: 0;
+    font-family: 'Fredoka', sans-serif;
+    font-size: 0.85rem;
+    color: var(--azul-oscuro);
+    opacity: 0.6;
+    cursor: pointer;
+}
+
+.link-comentarios:hover { opacity: 1; color: var(--azul-medio); }
+
+.card-comentarios {
+    border-top: 1px solid rgba(5, 10, 48, 0.12);
+    padding: 12px 15px 15px;
+}
+
+/* Página "publicación": se ve grande y la foto completa (sin recorte) */
+:host(.expandida) { max-width: 720px; }
+:host(.expandida) .card-imagen-contenedor { aspect-ratio: auto; background-color: #000; }
+:host(.expandida) .card-imagen { max-height: 75vh; object-fit: contain; }
+:host(.expandida) .card-titulo { font-size: 1.35rem; }
+:host(.expandida) .card-mensaje { font-size: 1rem; }
