@@ -19,4 +19,6 @@ async function bootstrap() {
 
   await app.listen(process.env.PORT ?? 3000);
 }
-await bootstrap();
+// Sin "await": Vercel importa este archivo y espera a que la app escuche (app.listen).
+// Con un await arriba de todo, el import nunca termina y la función queda colgada.
+void bootstrap();
