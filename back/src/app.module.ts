@@ -14,6 +14,11 @@ import { PublicacionesModule } from './publicaciones/publicaciones.module.js';
         uri:
           config.get<string>('MONGO_URI') ??
           'mongodb://localhost:27017/red-social',
+        // Si no puede conectarse a Mongo, falla rápido y deja el motivo en los logs
+        // (en lugar de quedarse reintentando varios minutos sin responder).
+        serverSelectionTimeoutMS: 8000,
+        retryAttempts: 2,
+        retryDelay: 1000,
       }),
     }),
     UsuariosModule,
