@@ -13,7 +13,7 @@ import { RegistroDto } from './dto/registro.dto.js';
 import type { UsuarioToken } from './usuario-token.js';
 
 //Lo modificamos con jaz. era 15*60
-const VENCIMIENTO_TOKEN_SEG = "30s"; // 15 minutos
+const VENCIMIENTO_TOKEN_SEG = 15 * 60; // 15 minutos (en segundos)
 
 @Injectable()
 export class AuthService {
