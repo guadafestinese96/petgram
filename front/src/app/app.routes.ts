@@ -7,10 +7,7 @@ import { PublicacionDetalle } from './publicacion-detalle/publicacion-detalle';
 import { Publicaciones } from './publicaciones/publicaciones';
 import { Registro } from './registro/registro';
 
-// - Al abrir la app se pasa por "cargando", que valida el token contra el back.
-// - Solo se puede acceder a la app estando logueado (authGuard).
-// - El dashboard es solo para administradores y se carga bajo demanda (lazy loading),
-//   así la librería de gráficos no pesa para el resto de los usuarios.
+
 export const routes: Routes = [
   { path: '', redirectTo: 'cargando', pathMatch: 'full' },
   { path: 'cargando', component: Cargando, title: 'Petgram' },

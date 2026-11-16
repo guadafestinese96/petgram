@@ -8,12 +8,12 @@ export class CreatePublicacionDto {
   @Transform(recortar)
   @IsString({ message: 'El título es obligatorio.' })
   @IsNotEmpty({ message: 'El título es obligatorio.' })
-  @MaxLength(100, { message: 'El título no puede superar los 100 caracteres.' })
+  @MaxLength(50, { message: 'El título no puede superar los 50 caracteres.' })
   titulo: string;
 
   @Transform(recortar)
-  @IsString({ message: 'El mensaje es obligatorio.' })
-  @IsNotEmpty({ message: 'El mensaje es obligatorio.' })
-  @MaxLength(500, { message: 'El mensaje no puede superar los 500 caracteres.' })
+  @IsString({ message: 'La descripción es obligatoria.' })
+  @IsNotEmpty({ message: 'La descripción es obligatoria.' })
+  @MaxLength(500, { message: 'La descripción no puede superar los 500 caracteres.' })
   mensaje: string;
 }

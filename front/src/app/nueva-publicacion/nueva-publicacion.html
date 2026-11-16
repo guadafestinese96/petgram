@@ -33,18 +33,23 @@
 
         <div class="campo">
           <label class="label">Título:</label>
-          <input type="text" formControlName="titulo" class="input" maxlength="100" />
+          <input type="text" formControlName="titulo" class="input" [attr.maxlength]="maxTitulo" />
           @if (form.get('titulo')?.touched && form.get('titulo')?.invalid) {
-            <div class="error">El título es obligatorio (máximo 100 caracteres).</div>
+            <div class="error">El título es obligatorio (máximo {{ maxTitulo }} caracteres).</div>
           }
         </div>
 
         <div class="campo">
-          <label class="label">Mensaje:</label>
-          <textarea formControlName="mensaje" class="input textarea" rows="3" maxlength="500"></textarea>
-          @if (form.get('mensaje')?.touched && form.get('mensaje')?.invalid) {
-            <div class="error">El mensaje es obligatorio (máximo 500 caracteres).</div>
-          }
+          <label class="label">Descripción:</label>
+          <textarea formControlName="mensaje" class="input textarea" rows="3" [attr.maxlength]="maxDescripcion"></textarea>
+          <div class="pie-campo">
+            @if (form.get('mensaje')?.touched && form.get('mensaje')?.invalid) {
+              <div class="error">La descripción es obligatoria (máximo {{ maxDescripcion }} caracteres).</div>
+            }
+            <span class="contador" [class.contador-limite]="largoDescripcion >= maxDescripcion" aria-live="polite">
+              {{ largoDescripcion }} / {{ maxDescripcion }}
+            </span>
+          </div>
         </div>
 
         <div class="acciones">

@@ -7,6 +7,10 @@ import { obtenerMensajeError } from '../shared/http-error';
 import { validarImagen } from '../shared/imagen';
 import { Modal, TipoModal } from '../shared/modal/modal';
 
+// El título tiene que entrar en una sola línea de la card
+const MAX_TITULO = 50;
+const MAX_DESCRIPCION = 500;
+
 @Component({
   selector: 'app-nueva-publicacion',
   imports: [ReactiveFormsModule, FontAwesomeModule, Modal],
@@ -19,6 +23,9 @@ export class NuevaPublicacion {
   cerrar = output<void>();
   // Avisa al padre para que recargue el listado
   creada = output<void>();
+
+  maxTitulo = MAX_TITULO;
+  maxDescripcion = MAX_DESCRIPCION;
 
   faImage = faImage;
   faXmark = faXmark;
@@ -39,9 +46,14 @@ export class NuevaPublicacion {
     private publicacionesService: PublicacionesService,
   ) {
     this.form = this.fb.group({
-      titulo: ['', [Validators.required, Validators.maxLength(100)]],
-      mensaje: ['', [Validators.required, Validators.maxLength(500)]],
+      titulo: ['', [Validators.required, Validators.maxLength(MAX_TITULO)]],
+      mensaje: ['', [Validators.required, Validators.maxLength(MAX_DESCRIPCION)]],
     });
+  }
+
+  // Contador de caracteres de la descripción
+  get largoDescripcion(): number {
+    return (this.form.get('mensaje')?.value ?? '').length;
   }
 
   onFileSelected(event: Event) {

@@ -166,6 +166,26 @@
     margin-top: 2px;
 }
 
+/* Debajo de la descripción: error a la izquierda, contador a la derecha */
+.pie-campo {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin-top: 2px;
+}
+
+.contador {
+    margin-left: auto;
+    font-size: 11px;
+    opacity: 0.7;
+    white-space: nowrap;
+}
+
+.contador-limite {
+    color: #ff8080;
+    opacity: 1;
+}
+
 /* ---------- BOTONES ---------- */
 .acciones {
     display: flex;
