@@ -1,6 +1,7 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
-import { TimeoutError, forkJoin, timeout, timer } from 'rxjs';
+import { Subscription, TimeoutError, forkJoin, timeout, timer } from 'rxjs';
 import { AuthService } from '../services/auth.service';
 import { obtenerMensajeError } from '../shared/http-error';
 
@@ -18,7 +19,7 @@ const TIEMPO_MAXIMO_MS = 15000;
   templateUrl: './cargando.html',
   styleUrl: './cargando.css',
 })
-export class Cargando implements OnInit {
+export class Cargando {
   private authService = inject(AuthService);
   private router = inject(Router);
   private route = inject(ActivatedRoute);
@@ -26,12 +27,26 @@ export class Cargando implements OnInit {
   mensaje = signal('Cargando Petgram...');
   error = signal<string | null>(null);
 
-  ngOnInit() {
-    this.validarSesion();
+  private validacion?: Subscription;
+
+  constructor() {
+    // Angular reutiliza este componente si se vuelve a navegar a /cargando estando ya acá
+    // (solo cambia ?destino=...). En ese caso ngOnInit NO se vuelve a ejecutar y el spinner
+    // quedaba girando para siempre. Escuchando los query params se valida en cada llegada.
+    this.route.queryParamMap
+      .pipe(takeUntilDestroyed())
+      .subscribe(() => this.validarSesion());
   }
 
   validarSesion() {
     this.error.set(null);
+    this.validacion?.unsubscribe();
+
+    // La sesión ya se validó (por ejemplo, otra navegación llegó primero): ir directo
+    if (this.authService.obtenerToken() && this.authService.sesionValidada) {
+      this.router.navigateByUrl(this.destino());
+      return;
+    }
 
     if (!this.authService.obtenerToken()) {
       this.mensaje.set('Preparando todo...');
@@ -40,7 +55,7 @@ export class Cargando implements OnInit {
     }
 
     this.mensaje.set('Verificando tu sesión...');
-    forkJoin([
+    this.validacion = forkJoin([
       this.authService.autorizar().pipe(timeout(TIEMPO_MAXIMO_MS)),
       timer(DURACION_MINIMA_MS),
     ]).subscribe({
