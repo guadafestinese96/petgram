@@ -17,6 +17,13 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const esNuestroBack = req.url.startsWith(API_URL);
   const token = authService.obtenerToken();
 
+  if (esNuestroBack) {
+    // ngsw-bypass: el service worker (PWA) deja pasar estas peticiones directo a la red.
+    // Las llamadas a la API no se cachean, y en Safari (iPhone) pasarlas por el service worker
+    // puede dejarlas colgadas (spinner infinito en "Verificando tu sesión").
+    req = req.clone({ setParams: { 'ngsw-bypass': 'true' } });
+  }
+
   if (token && esNuestroBack) {
     req = req.clone({ setHeaders: { Authorization: `Bearer ${token}` } });
   }
