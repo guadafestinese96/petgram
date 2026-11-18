@@ -1,8 +1,6 @@
 import { BadRequestException, InternalServerErrorException, Logger } from '@nestjs/common';
 import multer from 'multer';
-import { createHash, randomUUID } from 'node:crypto';
-import { mkdir, writeFile } from 'node:fs/promises';
-import { join } from 'node:path';
+import { createHash } from 'node:crypto';
 
 const EXTENSIONES: Record<string, string> = {
   'image/jpeg': '.jpg',
@@ -35,18 +33,23 @@ export const opcionesImagen = {
   },
 };
 
-// Guarda la imagen y devuelve la URL que se persiste en la base de datos.
-// - Con las variables CLOUDINARY_* definidas (producción en Vercel): la sube a Cloudinary
-//   y devuelve la URL completa (https://res.cloudinary.com/...).
-// - Sin esas variables (desarrollo local): la guarda en uploads/<carpeta> como antes.
+// Guarda la imagen en Cloudinary y devuelve la URL completa (https://res.cloudinary.com/...)
+// que se persiste en la base de datos.
+// Las imágenes NUNCA se guardan en el disco local: si Cloudinary no está configurado
+// o la subida falla, se lanza una excepción y la operación (registro, publicación, etc.) no se completa.
 export async function guardarImagen(
   file: Express.Multer.File,
   carpeta: CarpetaImagenes,
 ): Promise<string> {
-  if (cloudinaryConfigurado()) {
-    return await subirACloudinary(file, carpeta);
+  if (!cloudinaryConfigurado()) {
+    logger.error(
+      'Faltan las variables CLOUDINARY_CLOUD_NAME / CLOUDINARY_API_KEY / CLOUDINARY_API_SECRET.',
+    );
+    throw new InternalServerErrorException(
+      'No se pudo guardar la imagen: el servicio de imágenes no está configurado.',
+    );
   }
-  return await guardarEnDisco(file, carpeta);
+  return await subirACloudinary(file, carpeta);
 }
 
 // Se mantiene para el módulo de autenticación (Sprint 1)
@@ -111,17 +114,4 @@ async function subirACloudinary(
       'No se pudo guardar la imagen. Intentá de nuevo en unos minutos.',
     );
   }
-}
-
-// ---------- Disco local (desarrollo) ----------
-
-async function guardarEnDisco(
-  file: Express.Multer.File,
-  carpeta: CarpetaImagenes,
-): Promise<string> {
-  const directorio = join(process.cwd(), 'uploads', carpeta);
-  await mkdir(directorio, { recursive: true });
-  const nombre = `${randomUUID()}${EXTENSIONES[file.mimetype]}`;
-  await writeFile(join(directorio, nombre), file.buffer);
-  return `/uploads/${carpeta}/${nombre}`;
 }

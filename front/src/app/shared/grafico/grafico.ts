@@ -43,6 +43,7 @@ export class Grafico {
   }
 
   private dibujar(tipo: TipoGrafico, etiquetas: string[], valores: number[]) {
+    //destruyo el anterior
     this.grafico?.destroy();
 
     const esCircular = tipo === 'pie' || tipo === 'doughnut';

@@ -96,6 +96,7 @@ export class AuthService {
 
   // JWT con quién es el usuario y su rol. Vence a los 15 minutos.
   generarToken(usuario: UsuarioDocument): string {
+    //si la variable no existe lanzo error, no guardo una clave vacía
     const secreto = this.config.getOrThrow<string>('JWT_SECRET');
 
     return jwt.sign(

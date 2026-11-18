@@ -1,11 +1,15 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { forkJoin, timer } from 'rxjs';
+import { TimeoutError, forkJoin, timeout, timer } from 'rxjs';
 import { AuthService } from '../services/auth.service';
 import { obtenerMensajeError } from '../shared/http-error';
 
 // Tiempo mínimo que se ve la pantalla (para que el spinner no sea un "parpadeo")
 const DURACION_MINIMA_MS = 900;
+
+// Si el back no responde en este tiempo (por ejemplo, Vercel "despertando" o mala conexión
+// en el celu) se muestra el error con "Reintentar" en vez de dejar el spinner para siempre.
+const TIEMPO_MAXIMO_MS = 15000;
 
 // Pantalla inicial: valida el token guardado contra POST /auth/autorizar.
 // Válido => publicaciones (o la ruta que se quiso abrir). Inválido => login.
@@ -36,7 +40,10 @@ export class Cargando implements OnInit {
     }
 
     this.mensaje.set('Verificando tu sesión...');
-    forkJoin([this.authService.autorizar(), timer(DURACION_MINIMA_MS)]).subscribe({
+    forkJoin([
+      this.authService.autorizar().pipe(timeout(TIEMPO_MAXIMO_MS)),
+      timer(DURACION_MINIMA_MS),
+    ]).subscribe({
       next: ([respuesta]) => {
         this.authService.actualizarUsuario(respuesta.usuario);
         this.authService.sesionValidada = true;
@@ -45,6 +52,10 @@ export class Cargando implements OnInit {
       error: (err) => {
         // 401: el interceptor ya cerró la sesión y redirigió al login
         if (err?.status === 401) return;
+        if (err instanceof TimeoutError) {
+          this.error.set('El servidor está tardando en responder. Tocá "Reintentar".');
+          return;
+        }
         this.error.set(obtenerMensajeError(err));
       },
     });
