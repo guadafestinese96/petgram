@@ -8,7 +8,10 @@
   </header>
 
   <!-- Nuevo comentario -->
-  <form class="nuevo" (ngSubmit)="enviar()">
+  <!-- (submit) + preventDefault: este form no tiene [formGroup], así que (ngSubmit) nunca se dispara
+       y al tocar el botón el navegador hacía el submit "nativo" y RECARGABA la página
+       (se veía "Verificando tu sesión..." y el comentario se perdía). -->
+  <form class="nuevo" (submit)="$event.preventDefault(); enviar()">
     <textarea
       class="nuevo-input"
       [formControl]="nuevo"
