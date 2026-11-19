@@ -13,7 +13,7 @@ import { Modal } from './shared/modal/modal';
   templateUrl: './app.html',
 })
 export class App {
-  // Contador de sesión: a los 10 minutos avisa que quedan 5 y ofrece extenderla
+  // Contador de sesión: a los 30 segundos avisa que quedan 30 y ofrece extenderla
   protected sesion = inject(SesionService);
 
   constructor() {

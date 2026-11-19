@@ -48,7 +48,7 @@ export class AuthController {
   }
 
   // Header Authorization: Bearer <token>
-  // Token válido => 200 con un token nuevo (misma payload, vence en 15 minutos)
+  // Token válido => 200 con un token nuevo (misma payload, vence en 60 segundos)
   @Post('refrescar')
   @HttpCode(HttpStatus.OK)
   @UseGuards(TokenGuard)

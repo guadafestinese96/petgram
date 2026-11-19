@@ -36,7 +36,7 @@ export class AuthService {
     return this.http.post<{ usuario: Usuario }>(`${API_URL}/auth/autorizar`, {});
   }
 
-  // Pide un token nuevo con otros 15 minutos de vida
+  // Pide un token nuevo con otros 60 segundos de vida
   refrescar(): Observable<AuthResponse> {
     return this.http.post<AuthResponse>(`${API_URL}/auth/refrescar`, {});
   }

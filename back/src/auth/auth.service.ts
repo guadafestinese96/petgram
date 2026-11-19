@@ -12,8 +12,8 @@ import { LoginDto } from './dto/login.dto.js';
 import { RegistroDto } from './dto/registro.dto.js';
 import type { UsuarioToken } from './usuario-token.js';
 
-//Lo modificamos con jaz. era 15*60
-const VENCIMIENTO_TOKEN_SEG = 15 * 60; // 15 minutos (en segundos)
+// Requisito de la corrección: el token vence a los 60 segundos
+const VENCIMIENTO_TOKEN_SEG = 60;
 
 @Injectable()
 export class AuthService {
@@ -71,7 +71,7 @@ export class AuthService {
     return { usuario: this.usuariosService.sanitizar(usuario) };
   }
 
-  // Nuevo token con la misma payload y otros 15 minutos de vida
+  // Nuevo token con la misma payload y otros 60 segundos de vida
   async refrescar(datosToken: UsuarioToken) {
     const usuario = await this.buscarUsuarioHabilitado(datosToken.sub);
     return {
@@ -94,7 +94,7 @@ export class AuthService {
     return usuario;
   }
 
-  // JWT con quién es el usuario y su rol. Vence a los 15 minutos.
+  // JWT con quién es el usuario y su rol. Vence a los 60 segundos.
   generarToken(usuario: UsuarioDocument): string {
     //si la variable no existe lanzo error, no guardo una clave vacía
     const secreto = this.config.getOrThrow<string>('JWT_SECRET');

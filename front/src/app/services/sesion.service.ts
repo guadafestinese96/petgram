@@ -3,9 +3,9 @@ import { Router } from '@angular/router';
 import { obtenerMensajeError } from '../shared/http-error';
 import { AuthService } from './auth.service';
 
-// El token vence a los 15 minutos. El aviso aparece 5 minutos antes del vencimiento,
-// o sea, a los 10 minutos de haber iniciado (o refrescado) la sesión.
-const AVISO_ANTES_DE_VENCER_MS = 5 * 60 * 1000;
+// El token vence a los 60 segundos. El aviso aparece 30 segundos antes del vencimiento,
+// o sea, a los 30 segundos de haber iniciado (o refrescado) la sesión.
+const AVISO_ANTES_DE_VENCER_MS = 30 * 1000;
 
 @Injectable({ providedIn: 'root' })
 export class SesionService {
